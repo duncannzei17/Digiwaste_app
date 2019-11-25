@@ -45,7 +45,7 @@ class _GetLocationPageState extends State<GetLocationPage> {
               onPressed: () {
             //
               }),
-        title: Text("Your location"),
+        title: Text("Set location"),
         centerTitle: true,
       ),
       body: GoogleMap(
