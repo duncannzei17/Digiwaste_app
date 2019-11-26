@@ -28,10 +28,6 @@
 .pub-cache/
 .pub/
 /build/
-/lib/Admin
-/lib/Location
-/lib/Api
-/lib/main.dart
 
 # Android related
 **/android/**/gradle-wrapper.jar
