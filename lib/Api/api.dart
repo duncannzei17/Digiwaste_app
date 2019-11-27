@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 class CallApi{
-  final String _url = 'http://739fd2c1.ngrok.io:8000/api/';
+  final String _url = 'http://e2d95886.ngrok.io/api/';
  /* String get url {
     return _url;
   }*/
