@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:digiwaste_dev/Home/userHomeScreen.dart';
 import 'package:digiwaste_dev/Login/loginScreen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:digiwaste_dev/Admin/transporterScreen.dart';
 void main() => runApp(MyApp());
 
 class MyApp extends StatefulWidget {
@@ -40,6 +41,7 @@ class _MyAppState extends State<MyApp> {
       ),
       home: Scaffold(
         body: _isLoggedIn ? Home() :  LogIn(),
+      //  body: Transporter()
       ),
 
     );
