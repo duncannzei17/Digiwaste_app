@@ -1,135 +1,13 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'dart:convert';
-import 'dart:async';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:digiwaste_dev/Api/api.dart';
-import 'package:digiwaste_dev/Admin/searchUser.dart';
-
-
-class Transporters extends StatefulWidget{
-
-  @override
-  State<StatefulWidget> createState() => new _TransportersState();
-}
-
-class _TransportersState  extends State<Transporters>{
-
-  void _searchUser() {
-    Navigator.push(
-        context,
-        new MaterialPageRoute(
-            builder: (context) => SearchUser()));
-  }
-
-  Future<List> fetchData() async{
-
-    var res = await CallApi().getData('transporters');
-    var body = json.decode(res.body['tansporters']);
-
-    return body;
-
-  }
-  @override
-  Widget build(BuildContext context) {
-
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-            icon: Icon(FontAwesomeIcons.truck),
-            onPressed: () {
-            //
-            }),
-        title: Text("Transporters"),
-        centerTitle: true,
-      ),
-      body: FutureBuilder<List>(
-        future: fetchData(),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) print(snapshot.error);
-          return snapshot.hasData ? new ItemList(list: snapshot.data,)
-              : new Center(
-                 child: CircularProgressIndicator(),
-          );
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _searchUser,
-        child: Icon(FontAwesomeIcons.plus),
-      ),
-
-    );
-  }}
-class ItemList extends StatelessWidget{
-  List list;
-  ItemList({this.list});
-
-  @override
-  Widget build(BuildContext context) {
-    return ListView.builder(
-        itemCount: list == null ? 0 : list.length,
-        itemBuilder: (context, i) {
-          return Container(
-            padding: const EdgeInsets.all(10),
-            child: Card(
-              child: ListTile(
-                title: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-
-                    Text(list[i]['email']),
-
-                  ],
-                ),
-
-                leading: Icon(Icons.widgets),
-
-                subtitle: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    SizedBox(height: 2,),
-                    Row(
-
-                      mainAxisAlignment: MainAxisAlignment.start,
-
-                      children: <Widget>[
-                        Text('Region : '),
-
-                        Text(list[i]['region'])
-                      ],
-                    ),
-                    SizedBox(height: 2,),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-                        Text('ID : '),
-                        Text(list[i]['id'])
-                      ],
-                    ),
-
-
-                  ],
-                ),
-
-              ),
-
-            ),
-          );
-        })
-    ;
-  }
-
-}
-
-/*
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:digiwaste_dev/Login/loginScreen.dart';
-import 'package:digiwaste_dev/Admin/searchUser.dart';
+import 'package:digiwaste_dev/Admin/SearchUser.dart';
 import 'package:digiwaste_dev/Api/api.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:http/http.dart' as http;
+import 'dart:async';
 
 class Transporter extends StatefulWidget {
   @override
@@ -138,22 +16,27 @@ class Transporter extends StatefulWidget {
 
 class _TransporterState extends State<Transporter> {
   var userData;
-  @override
-  void initState() {
-    _getUserInfo();
-    super.initState();
+//  @override
+//  void initState() {
+//    _getUserInfo();
+//    super.initState();
+//  }
+
+//  void _getUserInfo() async {
+//    SharedPreferences localStorage = await SharedPreferences.getInstance();
+//    var userJson = localStorage.getString('user');
+//    var user = json.decode(userJson);
+//    setState(() {
+//      userData = user;
+//    });
+
+ // }
+  Future<List> fetchData() async{
+    var url = 'https://anroidcrud.000webhostapp.com/get.php';
+    final response = await http.get(url);
+    return json.decode(response.body);
+    //print(data.toString());
   }
-
-  void _getUserInfo() async {
-    SharedPreferences localStorage = await SharedPreferences.getInstance();
-    var userJson = localStorage.getString('user');
-    var user = json.decode(userJson);
-    setState(() {
-      userData = user;
-    });
-
-  }
-
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
 
@@ -172,37 +55,15 @@ class _TransporterState extends State<Transporter> {
         title: Text("Transporters"),
         centerTitle: true,
       ),
-      body: Container(
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                 Card(
-                  elevation: 4.0,
-                  color: Colors.white,
-                  margin: EdgeInsets.only(left: 10, right: 10),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15)),
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                        left: 10, right: 10, top: 40, bottom: 40),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-
-
-                      ],
-                    ),
-                  ),
-                ),
-
-              ],
-            ),
-          ),
-        ),
+      body: FutureBuilder<List>(
+        future: fetchData(),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) print(snapshot.error);
+          return snapshot.hasData ? new ItemList(list: snapshot.data,)
+              : new Center(
+            child: CircularProgressIndicator(),
+          );
+        },
       ),
       drawer: Drawer(
         // Add a ListView to the drawer. This ensures the user can scroll
@@ -233,13 +94,23 @@ class _TransporterState extends State<Transporter> {
               },
             ),
             ListTile(
-              leading: Icon(FontAwesomeIcons.calendar),
+              leading: Icon(FontAwesomeIcons.truck),
               title: Text('Schedules'),
               onTap: () {
-                // Update the state of the app
-                // ...
-                // Then close the drawer
-                Navigator.pop(context);
+                Navigator.push(
+                    context,
+                    new MaterialPageRoute(
+                        builder: (context) => Transporter()));
+              },
+            ),
+            ListTile(
+              leading: Icon(FontAwesomeIcons.truck),
+              title: Text('Payment'),
+              onTap: () {
+                Navigator.push(
+                    context,
+                    new MaterialPageRoute(
+                        builder: (context) => Transporter()));
               },
             ),
             ListTile(
@@ -258,6 +129,7 @@ class _TransporterState extends State<Transporter> {
       ),
     );
   }
+
   void logout() async{
     // logout from the server ...
     var res = await CallApi().getData('logout');
@@ -281,4 +153,87 @@ class _TransporterState extends State<Transporter> {
             builder: (context) => SearchUser()));
   }
 
-}*/
+}
+class ItemList extends StatelessWidget{
+  List list;
+  ItemList({this.list});
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+        itemCount: list == null ? 0 : list.length,
+        itemBuilder: (context, i) {
+          return Container(
+            padding: const EdgeInsets.all(10),
+            child: Card(
+              child: ListTile(
+                title: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+
+                    Text(list[i]['firstname']),
+
+                    SizedBox(width: 5,),
+                    Text(list[i]['sirname']),
+                  ],
+                ),
+
+                leading: Icon(Icons.widgets),
+
+                subtitle: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    SizedBox(height: 2,),
+                    Row(
+
+                      mainAxisAlignment: MainAxisAlignment.start,
+
+                      children: <Widget>[
+                        Text('Address : '),
+
+                        Text(list[i]['address'])
+                      ],
+                    ),
+                    SizedBox(height: 2,),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        Text('Phone Number : '),
+                        Text(list[i]['phonenumber'])
+                      ],
+                    ),
+                    SizedBox(height: 2,),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        Text('Status : '),
+                        Text(list[i]['status'])
+                      ],
+                    ),
+                    SizedBox(height: 2,),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        Text('National ID : '),
+                        Text(list[i]['address'])
+                      ],
+                    ),
+                    SizedBox(height: 2,),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        Text('Age : '),
+                        Text(list[i]['age'])
+                      ],
+                    ),
+
+                  ],
+                ),
+
+              ),
+
+            ),
+          );
+        })
+    ;
+  }}
