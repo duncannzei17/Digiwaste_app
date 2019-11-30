@@ -2,8 +2,12 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+
 class CallApi{
-  final String _url = 'http://e2d95886.ngrok.io/api/';
+
+  final String _url = 'http://b66a9c22.ngrok.io/api/';
+
+
  /* String get url {
     return _url;
   }*/
@@ -16,7 +20,7 @@ class CallApi{
         headers: _setHeaders()
     );
   }
-  
+
   getData(apiUrl) async {
     var fullUrl = _url + apiUrl + await _getToken();
     return await http.get(
