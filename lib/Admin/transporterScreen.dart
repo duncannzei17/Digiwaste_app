@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:dio/dio.dart';
 
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -14,58 +15,32 @@ class Transporter extends StatefulWidget {
   _TransporterState createState() => _TransporterState();
 }
 
-class _TransporterState extends State<Transporter> {
-  var userData;
-//  @override
-//  void initState() {
-//    _getUserInfo();
-//    super.initState();
-//  }
+class _TransporterState extends State<Transporter>  {
 
-//  void _getUserInfo() async {
-//    SharedPreferences localStorage = await SharedPreferences.getInstance();
-//    var userJson = localStorage.getString('user');
-//    var user = json.decode(userJson);
-//    setState(() {
-//      userData = user;
-//    });
-
- // }
   Future<List> fetchData() async{
-    var url = 'https://anroidcrud.000webhostapp.com/get.php';
-    final response = await http.get(url);
-    return json.decode(response.body);
-    //print(data.toString());
+
+    final response = await http.get('http://b66a9c22.ngrok.io/api/');
+    final dynamic data= json.decode(response.body);
+    print(data['transporters']);
+    return data['transporters'] ;
+
   }
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-
-
   @override
   Widget build(BuildContext context) {
+    // TODO: implement build
     return Scaffold(
-      backgroundColor: Colors.grey[200],
-      key: _scaffoldKey,
-      appBar: AppBar(
-        leading: IconButton(
-            icon: Icon(FontAwesomeIcons.bars),
-            onPressed: () {
-              _scaffoldKey.currentState.openDrawer();
-
-            }),
-        title: Text("Transporters"),
-        centerTitle: true,
-      ),
+      appBar:AppBar(title:Text('Transporter'),centerTitle: true,),
       body: FutureBuilder<List>(
         future: fetchData(),
         builder: (context, snapshot) {
           if (snapshot.hasError) print(snapshot.error);
           return snapshot.hasData ? new ItemList(list: snapshot.data,)
               : new Center(
-            child: CircularProgressIndicator(),
+            child:  CircularProgressIndicator(),
           );
         },
       ),
-      drawer: Drawer(
+    drawer: Drawer(
         // Add a ListView to the drawer. This ensures the user can scroll
         // through the options in the drawer if there isn't enough vertical
         // space to fit everything.
@@ -127,37 +102,12 @@ class _TransporterState extends State<Transporter> {
         onPressed: _searchUser,
         child: Icon(FontAwesomeIcons.plus),
       ),
+
     );
-  }
-
-  void logout() async{
-    // logout from the server ...
-    var res = await CallApi().getData('logout');
-    var body = json.decode(res.body);
-    if(body['success']){
-      SharedPreferences localStorage = await SharedPreferences.getInstance();
-      localStorage.remove('user');
-      localStorage.remove('token');
-      Navigator.push(
-          context,
-          new MaterialPageRoute(
-              builder: (context) => LogIn()));
-    }
-
-  }
-
-  void _searchUser() {
-    Navigator.push(
-        context,
-        new MaterialPageRoute(
-            builder: (context) => SearchUser()));
-  }
-
-}
+  }}
 class ItemList extends StatelessWidget{
   List list;
   ItemList({this.list});
-
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
@@ -171,14 +121,14 @@ class ItemList extends StatelessWidget{
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
 
-                    Text(list[i]['firstname']),
+                    Text(list[i]['firstName']),
 
-                    SizedBox(width: 5,),
-                    Text(list[i]['sirname']),
+                   SizedBox(width: 5,),
+                   Text(list[i]['lastName']),
                   ],
                 ),
 
-                leading: Icon(Icons.widgets),
+              leading: Icon(Icons.widgets),
 
                 subtitle: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -189,51 +139,83 @@ class ItemList extends StatelessWidget{
                       mainAxisAlignment: MainAxisAlignment.start,
 
                       children: <Widget>[
-                        Text('Address : '),
+                        Text('Email Address : '),
 
-                        Text(list[i]['address'])
+                        Text(list[i]['email'])
                       ],
                     ),
-                    SizedBox(height: 2,),
+                   SizedBox(height: 2,),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[
                         Text('Phone Number : '),
-                        Text(list[i]['phonenumber'])
+                        Text(list[i]['phone'])
                       ],
                     ),
-                    SizedBox(height: 2,),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-                        Text('Status : '),
-                        Text(list[i]['status'])
-                      ],
-                    ),
-                    SizedBox(height: 2,),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-                        Text('National ID : '),
-                        Text(list[i]['address'])
-                      ],
-                    ),
-                    SizedBox(height: 2,),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-                        Text('Age : '),
-                        Text(list[i]['age'])
-                      ],
-                    ),
+//                    SizedBox(height: 2,),
+//                    Row(
+//                      mainAxisAlignment: MainAxisAlignment.start,
+//                      children: <Widget>[
+//                        Text('Status : '),
+//                        Text(list[i]['status'])
+//                      ],
+//                    ),
+//                    SizedBox(height: 2,),
+//                    Row(
+//                      mainAxisAlignment: MainAxisAlignment.start,
+//                      children: <Widget>[
+//                        Text('National ID : '),
+//                        Text(list[i]['address'])
+//                      ],
+//                    ),
+//                    SizedBox(height: 2,),
+//                    Row(
+//                      mainAxisAlignment: MainAxisAlignment.start,
+//                      children: <Widget>[
+//                        Text('Age : '),
+//                        Text(list[i]['age'])
+//                      ],
+//                    ),
+//
+//                  ],
+//                ),
 
-                  ],
-                ),
-
-              ),
+              ]),
 
             ),
+          )
           );
         })
     ;
   }}
+
+
+  void logout() async{
+
+    BuildContext context;
+    // logout from the server ...
+    var res = await CallApi().getData('logout');
+    var body = json.decode(res.body);
+    if(body['success']){
+      SharedPreferences localStorage = await SharedPreferences.getInstance();
+      localStorage.remove('user');
+      localStorage.remove('token');
+      Navigator.push(
+          context,
+          new MaterialPageRoute(
+              builder: (context) => LogIn()));
+    }
+}
+  void _searchUser() {
+    BuildContext context;
+    Navigator.push(
+        context,
+        new MaterialPageRoute(
+            builder: (context) => SearchUser()));
+  }
+
+
+
+
+
+
