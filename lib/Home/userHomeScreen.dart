@@ -3,10 +3,12 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:digiwaste_dev/Login/loginScreen.dart';
-import 'package:digiwaste_dev/Transporter/transporterNav.dart';
-import 'package:digiwaste_dev/Location/userLocation.dart';
 import 'package:digiwaste_dev/Api/api.dart';
+import 'package:digiwaste_dev/Home/subscriptionScreen.dart';
+import 'package:digiwaste_dev/Home/pickUpScreen.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:http/http.dart' as http;
+import 'dart:async';
 
 class Home extends StatefulWidget {
   @override
@@ -19,6 +21,28 @@ class _HomeState extends State<Home> {
   void initState() {
     _getUserInfo();
     super.initState();
+  }
+
+  void _confirmSubscription() async {
+    var data = {
+      'user_id' : userData['id'],
+    };
+
+    var res = await CallApi().postData(data, 'checkSubscription');
+    var body = json.decode(res.body);
+    if(body['status'] == true){
+      Navigator.push(
+          context,
+          new MaterialPageRoute(
+              builder: (context) => PickUp()));
+    }else{
+      Navigator.push(
+          context,
+          new MaterialPageRoute(
+              builder: (context) => Subscription()));
+
+    }
+
   }
 
   void _getUserInfo() async {
@@ -291,78 +315,6 @@ class _HomeState extends State<Home> {
                   ),
                 ),
 
-                /////////////// Button////////////
-                Padding(
-                  padding: const EdgeInsets.only(top: 20, left: 10, right: 10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      /////////// Edit Button /////////////
-                      Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: FlatButton(
-                          child: Padding(
-                            padding: EdgeInsets.only(
-                                top: 8, bottom: 8, left: 10, right: 10),
-                            child: Text(
-                              'DashBoard',
-                              textDirection: TextDirection.ltr,
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 15.0,
-                                decoration: TextDecoration.none,
-                                fontWeight: FontWeight.normal,
-                              ),
-                            ),
-                          ),
-                          color: Color(0xFFFF835F),
-                          shape: new RoundedRectangleBorder(
-                              borderRadius: new BorderRadius.circular(20.0)),
-                          onPressed: () {
-                            if(userData['user_type'] == 1) {
-                              Navigator.push(
-                                  context,
-                                  new MaterialPageRoute(
-                                      builder: (context) => TransporterNavigator()));
-                            }
-                            else if(userData['user_type'] == 0){
-                              Navigator.push(
-                                  context,
-                                  new MaterialPageRoute(
-                                      builder: (context) => GetLocationPage()));
-                            }
-                          },
-                        ),
-                      ),
-
-                      ////////////// logout//////////
-
-                      Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: FlatButton(
-                          child: Padding(
-                            padding: EdgeInsets.only(
-                                top: 8, bottom: 8, left: 10, right: 10),
-                            child: Text(
-                              'Logout',
-                              textDirection: TextDirection.ltr,
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 15.0,
-                                decoration: TextDecoration.none,
-                                fontWeight: FontWeight.normal,
-                              ),
-                            ),
-                          ),
-                          color: Color(0xFFFF835F),
-                          shape: new RoundedRectangleBorder(
-                              borderRadius: new BorderRadius.circular(20.0)),
-                          onPressed: logout
-                        ),
-                      ),
-                    ],
-                  ),
-                )
               ],
             ),
           ),
@@ -377,27 +329,34 @@ class _HomeState extends State<Home> {
           padding: EdgeInsets.zero,
           children: <Widget>[
             DrawerHeader(
-              child: Text('Drawer Header'),
+              child: Icon(
+                FontAwesomeIcons.userCircle,
+                size: 100.0,
+                color: Color(0xFF9b9b9b),
+              ),
               decoration: BoxDecoration(
                 color: Color(0xFFFF835F),
               ),
             ),
             ListTile(
-              title: Text('Item 1'),
+              leading: Icon(FontAwesomeIcons.truck),
+              title: Text('Pickups'),
               onTap: () {
-                // Update the state of the app
-                // ...
-                // Then close the drawer
-                Navigator.pop(context);
+                _confirmSubscription();
               },
             ),
             ListTile(
-              title: Text('Item 2'),
+              leading: Icon(FontAwesomeIcons.calendar),
+              title: Text('History'),
               onTap: () {
-                // Update the state of the app
-                // ...
-                // Then close the drawer
-                Navigator.pop(context);
+               //
+              },
+            ),
+            ListTile(
+              leading: Icon(FontAwesomeIcons.signOutAlt),
+              title: Text('Logout'),
+              onTap: () {
+                logout();
               },
             ),
           ],
