@@ -1,10 +1,10 @@
 import 'dart:convert';
 
+import 'package:digiwaste_dev/Home/paymentScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:digiwaste_dev/Login/loginScreen.dart';
 import 'package:digiwaste_dev/Api/api.dart';
-import 'package:digiwaste_dev/Home/paymentsScreen.dart';
 import 'package:digiwaste_dev/Home/pickUpScreen.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 

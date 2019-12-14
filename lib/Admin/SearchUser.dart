@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:digiwaste_dev/Api/api.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 class SearchUser extends StatefulWidget {
   @override
@@ -16,6 +17,23 @@ class _SearchUserState extends State<SearchUser> {
   List filteredNames = new List();
   Icon _searchIcon = new Icon(Icons.search);
   Widget _appBarTitle = new Text( 'Search Email' );
+
+  var alertStyle = AlertStyle(
+    animationType: AnimationType.fromTop,
+    isCloseButton: false,
+    isOverlayTapDismiss: false,
+    descStyle: TextStyle(fontWeight: FontWeight.bold),
+    animationDuration: Duration(milliseconds: 400),
+    alertBorder: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(0.0),
+      side: BorderSide(
+        color: Colors.grey,
+      ),
+    ),
+    titleStyle: TextStyle(
+      color: Colors.red,
+    ),
+  );
 /*
   static final  path = CallApi.urlVal;
 */
@@ -77,9 +95,69 @@ class _SearchUserState extends State<SearchUser> {
     return ListView.builder(
       itemCount: names == null ? 0 : filteredNames.length,
       itemBuilder: (BuildContext context, int index) {
-        return new ListTile(
-          title: Text(filteredNames[index]['email']),
-          onTap: () => _createTransporter(filteredNames[index]['email'],filteredNames[index]['id']),
+        return Container(
+          padding: const EdgeInsets.all(10),
+          child: Card(
+            child: new ListTile(
+                title: Text(filteredNames[index]['email']),
+                leading: Icon(Icons.widgets),
+                onTap:()=>Alert(
+                  context: context,
+                  type: AlertType.warning,
+                  title: "CONFIRM",
+                  desc: "Make user transporter?",
+                  buttons: [
+                    DialogButton(
+                      child: Text(
+                        "NO",
+                        style: TextStyle(color: Colors.white, fontSize: 20),
+                      ),
+                      onPressed: () => Navigator.pop(context),
+                      gradient: LinearGradient(colors: [
+                        Color(0xFFFB415B),
+                        Color(0xFFEE5623)
+                      ]),
+
+                    ),
+                    DialogButton(
+                      child: Text(
+                        "YES",
+                        style: TextStyle(color: Colors.white, fontSize: 20),
+                      ),
+                      onPressed: () {
+                        _createTransporter(filteredNames[index]['email'],filteredNames[index]['id']);
+                        Navigator.pop(context);
+                        Alert(
+                          context: context,
+                          style: alertStyle,
+                          type: AlertType.info,
+                          title: "SUCCESS",
+                          desc: "Added to transporters",
+                          buttons: [
+                            DialogButton(
+                              child: Text(
+                                "Cool",
+                                style: TextStyle(color: Colors.white, fontSize: 20),
+                              ),
+                              onPressed: () => Navigator.pop(context),
+                              color: Color.fromRGBO(0, 179, 134, 1.0),
+                              radius: BorderRadius.circular(0.0),
+                            ),
+                          ],
+                        ).show();
+
+                      },
+                      gradient: LinearGradient(colors: [
+                        Color.fromRGBO(19, 123, 71, 1.0),
+                        Color.fromRGBO(19, 123, 19, 1.0)
+                      ]),
+                    )
+                  ],
+                ).show()
+
+              //onTap: () => _createTransporter(filteredNames[index]['email'],filteredNames[index]['id']),
+            ),
+          ),
         );
       },
     );
@@ -106,7 +184,7 @@ class _SearchUserState extends State<SearchUser> {
   }
 
   void _getNames() async {
-    final response = await dio.get( CallApi().returnUrl()+'users');
+    final response = await dio.get(CallApi().returnUrl()+'users');
     List tempList = new List();
     for (int i = 0; i < response.data['results'].length; i++) {
       tempList.add(response.data['results'][i]);
@@ -127,11 +205,5 @@ class _SearchUserState extends State<SearchUser> {
 
     await CallApi().postData(data, 'createTransporter');
   }
-
-
-
-
-
-
 
 }
