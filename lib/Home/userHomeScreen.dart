@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:digiwaste_dev/Login/loginScreen.dart';
 import 'package:digiwaste_dev/Api/api.dart';
-import 'package:digiwaste_dev/Home/paymentScreen.dart';
+import 'package:digiwaste_dev/Home/paymentsScreen.dart';
 import 'package:digiwaste_dev/Home/pickUpScreen.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -33,7 +33,7 @@ class _HomeState extends State<Home> {
       Navigator.push(
           context,
           new MaterialPageRoute(
-              builder: (context) => Subscription()));
+              builder: (context) => Home()));
     }else if(body['status'] == true){
       Navigator.push(
           context,
