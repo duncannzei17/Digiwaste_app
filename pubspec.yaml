@@ -32,7 +32,10 @@ dependencies:
   flutter_datetime_picker: ^1.2.8
   rflutter_alert: ^1.0.3
   mpesa_flutter_plugin: ^0.0.5
+<<<<<<< HEAD
+=======
 
+>>>>>>> e9ffc5b8adbc76fad136e8268beb073b36261621
 
 dev_dependencies:
   flutter_test:
@@ -52,9 +55,9 @@ flutter:
   assets:
     - images/mpesa-logo.png
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  #  - images/a_dot_burr.jpeg
-  #  - images/a_dot_ham.jpeg
+  assets:
+    - images/mpesa-logo.png
+
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
@@ -80,4 +83,7 @@ flutter:
   #         weight: 700
   #
   # For details regarding fonts from package dependencies,
-  # see https://flutter.dev/custom-fonts/#from-packages
+  # see https://flutter.dev/custom-fonts/#from-package
+module:
+
+   androidX: true // Add this line.

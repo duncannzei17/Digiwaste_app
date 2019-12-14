@@ -8,8 +8,13 @@ if (localPropertiesFile.exists()) {
 
 def flutterRoot = localProperties.getProperty('flutter.sdk')
 if (flutterRoot == null) {
+<<<<<<< HEAD
     //throw new GradleException("Flutter SDK not found. Define location with flutter.sdk in the local.properties file.")
 }
+=======
+   // throw new GradleException("Flutter SDK not found. Define location with flutter.sdk in the local.properties file.")
+ }
+>>>>>>> e2e4daf4974cd59c2eeba17cf9c89c3db34b8bfb
 
 def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
 if (flutterVersionCode == null) {
@@ -38,7 +43,12 @@ android {
         targetSdkVersion 28
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
+<<<<<<< HEAD
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+=======
+        //testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+>>>>>>> e2e4daf4974cd59c2eeba17cf9c89c3db34b8bfb
         multiDexEnabled true
     }
 
@@ -59,4 +69,42 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+}
+//multiDexEnabled true
+configurations.all {
+    resolutionStrategy { force 'androidx.media:media:1.0.0' }
+//    resolutionStrategy {
+//        resolutionStrategy.eachDependency { details ->
+//            if (details.requested.group == 'androidx.core') {
+//                details.useVersion "1.0.1"
+//            }
+//            if (details.requested.group == 'androidx.lifecycle') {
+//                details.useVersion "2.0.0"
+//            }
+//            if (details.requested.group == 'androidx.versionedparcelable') {
+//                details.useVersion "1.0.0"
+//            }
+//            if (details.requested.group == 'androidx.fragment') {
+//                details.useVersion "1.0.0"
+//            }
+//            if (details.requested.group == 'androidx.appcompat') {
+//                details.useVersion "1.0.1"
+//            }
+//        }
+//    }
+}
+subprojects {
+    project.configurations.all {
+        resolutionStrategy.eachDependency { details ->
+            if ((details.requested.group == 'androidx.localbroadcastmanager' || details.requested.group == 'androidx.versionedparcelable'
+                    || details.requested.group == 'androidx.loader')
+                    && !details.requested.name.contains('androidx') ) {
+                details.useVersion "1.0.0-rc01"
+            }
+            else if (details.requested.group == 'androidx.lifecycle'
+                    && !details.requested.name.contains('androidx') ) {
+                details.useVersion "2.0.0-rc01"
+            }
+        }
+    }
 }
