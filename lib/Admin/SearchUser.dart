@@ -106,7 +106,7 @@ class _SearchUserState extends State<SearchUser> {
   }
 
   void _getNames() async {
-    final response = await dio.get( 'http://4423a2a8.ngrok.io/api/users');
+    final response = await dio.get( CallApi().returnUrl()+'users');
     List tempList = new List();
     for (int i = 0; i < response.data['results'].length; i++) {
       tempList.add(response.data['results'][i]);
