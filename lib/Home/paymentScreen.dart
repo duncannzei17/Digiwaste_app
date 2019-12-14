@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:digiwaste_dev/Admin/transporterScreen.dart';
 import 'package:digiwaste_dev/Api/api.dart';
 import 'package:digiwaste_dev/Login/loginScreen.dart';
 import 'package:flutter/material.dart';
@@ -38,9 +37,7 @@ class _SubscriptionState extends State<Subscription> {
     });
   }
 
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
-  //var number=TextEditingController();
   Future<void> startCheckout({String userPhone, double amount}) async {
     //Preferably expect 'dynamic', response type varies a lot!
     dynamic transactionInitialisation;
@@ -79,9 +76,9 @@ class _SubscriptionState extends State<Subscription> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-            icon: Icon(FontAwesomeIcons.bars),
+            icon: Icon(FontAwesomeIcons.creditCard),
             onPressed: () {
-              _scaffoldKey.currentState.openDrawer();
+              //
             }),
         title: Text('Payment'),
         centerTitle: true,
@@ -93,7 +90,7 @@ class _SubscriptionState extends State<Subscription> {
           children: <Widget>[
             SizedBox(height:40),
             Image(
-              image: new AssetImage("images/mpesa-logo.png"),
+              image: new AssetImage("assets/images/mpesa.png"),
               height: 120.0,
               width: 120.0,
             ),
@@ -246,57 +243,6 @@ class _SubscriptionState extends State<Subscription> {
           ],
         ),
       ),
-      drawer: Drawer(
-        // Add a ListView to the drawer. This ensures the user can scroll
-        // through the options in the drawer if there isn't enough vertical
-        // space to fit everything.
-        child: ListView(
-          // Important: Remove any padding from the ListView.
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            DrawerHeader(
-              child: Icon(
-                FontAwesomeIcons.userCircle,
-                size: 100.0,
-                color: Color(0xFF9b9b9b),
-              ),
-              decoration: BoxDecoration(
-                color: Color(0xFFFF835F),
-              ),
-            ),
-            ListTile(
-              leading: Icon(FontAwesomeIcons.truck),
-              title: Text('Transporters'),
-              onTap: () {
-                Navigator.push(context,
-                    new MaterialPageRoute(builder: (context) => Transporter()));
-              },
-            ),
-            ListTile(
-              leading: Icon(FontAwesomeIcons.truck),
-              title: Text('Schedules'),
-              onTap: () {
-                Navigator.push(context,
-                    new MaterialPageRoute(builder: (context) => Transporter()));
-              },
-            ),
-            ListTile(
-              leading: Icon(FontAwesomeIcons.truck),
-              title: Text('Payment'),
-              onTap: () {
-          //
-              },
-            ),
-            ListTile(
-              leading: Icon(FontAwesomeIcons.signOutAlt),
-              title: Text('Logout'),
-              onTap: () {
-                logout();
-              },
-            ),
-          ],
-        ),
-      ),
     );
   }
 
@@ -304,7 +250,7 @@ class _SubscriptionState extends State<Subscription> {
     // margin: new EdgeInsets.symmetric(vertical: 16.0),
 
     child: new Image(
-      image: new AssetImage("images/mpesa-logo.png"),
+      image: new AssetImage("images/mpesa.png"),
       height: 92.0,
       width: 92.0,
     ),
@@ -312,6 +258,7 @@ class _SubscriptionState extends State<Subscription> {
 
   void logout() async {
     // logout from the server ...
+
     var res = await CallApi().getData('logout');
     var body = json.decode(res.body);
     if (body['success']) {

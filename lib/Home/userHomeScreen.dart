@@ -4,11 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:digiwaste_dev/Login/loginScreen.dart';
 import 'package:digiwaste_dev/Api/api.dart';
-import 'package:digiwaste_dev/Home/subscriptionScreen.dart';
+import 'package:digiwaste_dev/Home/paymentScreen.dart';
 import 'package:digiwaste_dev/Home/pickUpScreen.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:http/http.dart' as http;
-import 'dart:async';
 
 class Home extends StatefulWidget {
   @override
