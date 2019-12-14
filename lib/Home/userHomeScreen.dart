@@ -3,10 +3,12 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:digiwaste_dev/Login/loginScreen.dart';
-import 'package:digiwaste_dev/Transporter/transporterNav.dart';
-import 'package:digiwaste_dev/Location/userLocation.dart';
 import 'package:digiwaste_dev/Api/api.dart';
+import 'package:digiwaste_dev/Home/subscriptionScreen.dart';
+import 'package:digiwaste_dev/Home/pickUpScreen.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:http/http.dart' as http;
+import 'dart:async';
 
 class Home extends StatefulWidget {
   @override
@@ -21,13 +23,36 @@ class _HomeState extends State<Home> {
     super.initState();
   }
 
+  void _confirmSubscription() async {
+    var data = {
+      'user_id' : userData['id'],
+    };
+
+    var res = await CallApi().postData(data, 'checkSubscription');
+    var body = json.decode(res.body);
+   // print(body['status']);
+    if(body['status'] == false){
+      Navigator.push(
+          context,
+          new MaterialPageRoute(
+              builder: (context) => Subscription()));
+    }else if(body['status'] == true){
+      Navigator.push(
+          context,
+          new MaterialPageRoute(
+              builder: (context) => PickUp()));
+
+    }
+
+  }
+
   void _getUserInfo() async {
-      SharedPreferences localStorage = await SharedPreferences.getInstance();
-      var userJson = localStorage.getString('user');
-      var user = json.decode(userJson);
-      setState(() {
-        userData = user;
-      });
+    SharedPreferences localStorage = await SharedPreferences.getInstance();
+    var userJson = localStorage.getString('user');
+    var user = json.decode(userJson);
+    setState(() {
+      userData = user;
+    });
 
   }
 
@@ -40,15 +65,15 @@ class _HomeState extends State<Home> {
       backgroundColor: Colors.grey[200],
       key: _scaffoldKey,
       appBar: AppBar(
-          leading: IconButton(
-              icon: Icon(FontAwesomeIcons.bars),
-              onPressed: () {
+        leading: IconButton(
+            icon: Icon(FontAwesomeIcons.bars),
+            onPressed: () {
               _scaffoldKey.currentState.openDrawer();
 
-              }),
-          title: Text("Digiwaste"),
-          centerTitle: true,
-        ),
+            }),
+        title: Text("Digiwaste"),
+        centerTitle: true,
+      ),
       body: Container(
         child: Center(
           child: Padding(
@@ -81,7 +106,7 @@ class _HomeState extends State<Home> {
                               borderRadius: BorderRadius.circular(10)),
                           child: Container(
                             padding:
-                                EdgeInsets.only(left: 15, top: 10, bottom: 10),
+                            EdgeInsets.only(left: 15, top: 10, bottom: 10),
                             width: MediaQuery.of(context).size.width,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -96,7 +121,7 @@ class _HomeState extends State<Home> {
                                       ),
                                     ),
                                     Text(
-                                    'Firstname',
+                                      'Firstname',
                                       textAlign: TextAlign.left,
                                       style: TextStyle(
                                         color: Color(0xFF9b9b9b),
@@ -110,7 +135,7 @@ class _HomeState extends State<Home> {
                                 Padding(
                                   padding: const EdgeInsets.only(left: 35),
                                   child: Text(
-                                   userData!= null ? '${userData['firstName']}' : '',
+                                    userData!= null ? '${userData['firstName']}' : '',
                                     textAlign: TextAlign.left,
                                     style: TextStyle(
                                       color: Color(0xFF9b9b9b),
@@ -135,7 +160,7 @@ class _HomeState extends State<Home> {
                               borderRadius: BorderRadius.circular(10)),
                           child: Container(
                             padding:
-                                EdgeInsets.only(left: 15, top: 10, bottom: 10),
+                            EdgeInsets.only(left: 15, top: 10, bottom: 10),
                             width: MediaQuery.of(context).size.width,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -188,7 +213,7 @@ class _HomeState extends State<Home> {
                               borderRadius: BorderRadius.circular(10)),
                           child: Container(
                             padding:
-                                EdgeInsets.only(left: 15, top: 10, bottom: 10),
+                            EdgeInsets.only(left: 15, top: 10, bottom: 10),
                             width: MediaQuery.of(context).size.width,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -217,7 +242,7 @@ class _HomeState extends State<Home> {
                                 Padding(
                                   padding: const EdgeInsets.only(left: 35),
                                   child: Text(
-                                   userData!= null ? '${userData['email']}' : '',
+                                    userData!= null ? '${userData['email']}' : '',
                                     textAlign: TextAlign.left,
                                     style: TextStyle(
                                       color: Color(0xFF9b9b9b),
@@ -241,7 +266,7 @@ class _HomeState extends State<Home> {
                               borderRadius: BorderRadius.circular(10)),
                           child: Container(
                             padding:
-                                EdgeInsets.only(left: 15, top: 10, bottom: 10),
+                            EdgeInsets.only(left: 15, top: 10, bottom: 10),
                             width: MediaQuery.of(context).size.width,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -291,78 +316,6 @@ class _HomeState extends State<Home> {
                   ),
                 ),
 
-                /////////////// Button////////////
-                Padding(
-                  padding: const EdgeInsets.only(top: 20, left: 10, right: 10),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      /////////// Edit Button /////////////
-                      Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: FlatButton(
-                          child: Padding(
-                            padding: EdgeInsets.only(
-                                top: 8, bottom: 8, left: 10, right: 10),
-                            child: Text(
-                              'DashBoard',
-                              textDirection: TextDirection.ltr,
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 15.0,
-                                decoration: TextDecoration.none,
-                                fontWeight: FontWeight.normal,
-                              ),
-                            ),
-                          ),
-                          color: Color(0xFFFF835F),
-                          shape: new RoundedRectangleBorder(
-                              borderRadius: new BorderRadius.circular(20.0)),
-                          onPressed: () {
-                            if(userData['user_type'] == 1) {
-                              Navigator.push(
-                                  context,
-                                  new MaterialPageRoute(
-                                      builder: (context) => TransporterNavigator()));
-                            }
-                            else if(userData['user_type'] == 0){
-                              Navigator.push(
-                                  context,
-                                  new MaterialPageRoute(
-                                      builder: (context) => GetLocationPage()));
-                            }
-                          },
-                        ),
-                      ),
-
-                      ////////////// logout//////////
-
-                      Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: FlatButton(
-                          child: Padding(
-                            padding: EdgeInsets.only(
-                                top: 8, bottom: 8, left: 10, right: 10),
-                            child: Text(
-                              'Logout',
-                              textDirection: TextDirection.ltr,
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 15.0,
-                                decoration: TextDecoration.none,
-                                fontWeight: FontWeight.normal,
-                              ),
-                            ),
-                          ),
-                          color: Color(0xFFFF835F),
-                          shape: new RoundedRectangleBorder(
-                              borderRadius: new BorderRadius.circular(20.0)),
-                          onPressed: logout
-                        ),
-                      ),
-                    ],
-                  ),
-                )
               ],
             ),
           ),
@@ -387,21 +340,24 @@ class _HomeState extends State<Home> {
               ),
             ),
             ListTile(
-              title: Text('Item 1'),
+              leading: Icon(FontAwesomeIcons.truck),
+              title: Text('Pickups'),
               onTap: () {
-                // Update the state of the app
-                // ...
-                // Then close the drawer
-                Navigator.pop(context);
+                _confirmSubscription();
               },
             ),
             ListTile(
-              title: Text('Item 2'),
+              leading: Icon(FontAwesomeIcons.calendar),
+              title: Text('History'),
               onTap: () {
-                // Update the state of the app
-                // ...
-                // Then close the drawer
-                Navigator.pop(context);
+                //
+              },
+            ),
+            ListTile(
+              leading: Icon(FontAwesomeIcons.signOutAlt),
+              title: Text('Logout'),
+              onTap: () {
+                logout();
               },
             ),
           ],
@@ -410,18 +366,18 @@ class _HomeState extends State<Home> {
     );
   }
   void logout() async{
-      // logout from the server ...
-      var res = await CallApi().getData('logout');
-      var body = json.decode(res.body);
-      if(body['success']){
-         SharedPreferences localStorage = await SharedPreferences.getInstance();
-         localStorage.remove('user');
-         localStorage.remove('token');
-          Navigator.push(
-        context,
-        new MaterialPageRoute(
-            builder: (context) => LogIn()));
-      }
+    // logout from the server ...
+    var res = await CallApi().getData('logout');
+    var body = json.decode(res.body);
+    if(body['success']){
+      SharedPreferences localStorage = await SharedPreferences.getInstance();
+      localStorage.remove('user');
+      localStorage.remove('token');
+      Navigator.push(
+          context,
+          new MaterialPageRoute(
+              builder: (context) => LogIn()));
+    }
 
   }
 
