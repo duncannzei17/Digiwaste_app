@@ -99,7 +99,7 @@ class _TransporterState extends State<Transporter>  {
 
             ),
             ListTile(
-              leading: Icon(FontAwesomeIcons.truck),
+              leading: Icon(FontAwesomeIcons.calendar),
               title: Text('Schedules'),
               onTap: () {
                 Navigator.push(
