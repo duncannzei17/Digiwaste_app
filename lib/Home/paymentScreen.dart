@@ -50,9 +50,9 @@ class _SubscriptionState extends State<Subscription> {
           partyA: userPhone,
           partyB: "174379",
           callBackURL: Uri(
-              scheme: "http",
-              host:  Uri(scheme: "https", host: "sandbox.safaricom.co.ke"),
-              path: "/paymentsConfirm"),
+              scheme: "https",
+              host: "sandbox.safaricom.co.ke",
+              path: "/callback"),
           accountReference: "digiwaste",
           phoneNumber: userPhone,
           baseUri: Uri(scheme: "https", host: "sandbox.safaricom.co.ke"),
