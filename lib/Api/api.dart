@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class CallApi{
 
-  final String _url = 'http://b66a9c22.ngrok.io/api/';
+  final String _url = 'http://626039fe.ngrok.io/api/';
 
 
  /* String get url {

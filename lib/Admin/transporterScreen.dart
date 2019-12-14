@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:digiwaste_dev/Admin/paymentsScreen.dart';
 import 'package:dio/dio.dart';
 
 import 'package:flutter/material.dart';
@@ -16,20 +17,47 @@ class Transporter extends StatefulWidget {
 }
 
 class _TransporterState extends State<Transporter>  {
+  var userData;
+  @override
+  void initState() {
+    _getUserInfo();
+    super.initState();
+  }
+
+  void _getUserInfo() async {
+    SharedPreferences localStorage = await SharedPreferences.getInstance();
+    var userJson = localStorage.getString('user');
+    var user = json.decode(userJson);
+    setState(() {
+      userData = user;
+    });
+
+  }
+
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   Future<List> fetchData() async{
 
-    final response = await http.get('http://b66a9c22.ngrok.io/api/');
+    final response = await http.get('http://626039fe.ngrok.io/api/transporters');
     final dynamic data= json.decode(response.body);
     print(data['transporters']);
     return data['transporters'] ;
+
 
   }
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
-      appBar:AppBar(title:Text('Transporter'),centerTitle: true,),
+      key: _scaffoldKey,
+      appBar:AppBar(
+        leading: IconButton(
+            icon: Icon(FontAwesomeIcons.bars),
+            onPressed: () {
+              _scaffoldKey.currentState.openDrawer();
+
+            }),
+        title:Text('Transporter'),centerTitle: true,),
       body: FutureBuilder<List>(
         future: fetchData(),
         builder: (context, snapshot) {
@@ -85,7 +113,7 @@ class _TransporterState extends State<Transporter>  {
                 Navigator.push(
                     context,
                     new MaterialPageRoute(
-                        builder: (context) => Transporter()));
+                        builder: (context) => Home()));
               },
             ),
             ListTile(
@@ -104,7 +132,29 @@ class _TransporterState extends State<Transporter>  {
       ),
 
     );
-  }}
+  }
+  void logout() async{
+    // logout from the server ...
+    var res = await CallApi().getData('logout');
+    var body = json.decode(res.body);
+    if(body['success']){
+      SharedPreferences localStorage = await SharedPreferences.getInstance();
+      localStorage.remove('user');
+      localStorage.remove('token');
+      Navigator.push(
+          context,
+          new MaterialPageRoute(
+              builder: (context) => LogIn()));
+    }
+
+  }
+  void _searchUser() {
+    Navigator.push(
+        context,
+        new MaterialPageRoute(
+            builder: (context) => SearchUser()));
+  }
+}
 class ItemList extends StatelessWidget{
   List list;
   ItemList({this.list});
@@ -152,14 +202,14 @@ class ItemList extends StatelessWidget{
                         Text(list[i]['phone'])
                       ],
                     ),
-//                    SizedBox(height: 2,),
-//                    Row(
-//                      mainAxisAlignment: MainAxisAlignment.start,
-//                      children: <Widget>[
-//                        Text('Status : '),
-//                        Text(list[i]['status'])
-//                      ],
-//                    ),
+                    SizedBox(height: 2,),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        Text('Region : '),
+                        Text(list[i]['region'])
+                      ],
+                    ),
 //                    SizedBox(height: 2,),
 //                    Row(
 //                      mainAxisAlignment: MainAxisAlignment.start,
@@ -190,29 +240,6 @@ class ItemList extends StatelessWidget{
   }}
 
 
-  void logout() async{
-
-    BuildContext context;
-    // logout from the server ...
-    var res = await CallApi().getData('logout');
-    var body = json.decode(res.body);
-    if(body['success']){
-      SharedPreferences localStorage = await SharedPreferences.getInstance();
-      localStorage.remove('user');
-      localStorage.remove('token');
-      Navigator.push(
-          context,
-          new MaterialPageRoute(
-              builder: (context) => LogIn()));
-    }
-}
-  void _searchUser() {
-    BuildContext context;
-    Navigator.push(
-        context,
-        new MaterialPageRoute(
-            builder: (context) => SearchUser()));
-  }
 
 
 
