@@ -1,24 +1,49 @@
 import 'dart:convert';
 
-import 'package:digiwaste_dev/Admin/scheduleScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:digiwaste_dev/Login/loginScreen.dart';
-import 'package:digiwaste_dev/Admin/transporterScreen.dart';
 import 'package:digiwaste_dev/Api/api.dart';
+import 'package:digiwaste_dev/Home/subscriptionScreen.dart';
+import 'package:digiwaste_dev/Home/pickUpScreen.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:http/http.dart' as http;
+import 'dart:async';
 
-class AdminHome extends StatefulWidget {
+class Home extends StatefulWidget {
   @override
-  _AdminHomeState createState() => _AdminHomeState();
+  _HomeState createState() => _HomeState();
 }
 
-class _AdminHomeState extends State<AdminHome> {
+class _HomeState extends State<Home> {
   var userData;
   @override
   void initState() {
     _getUserInfo();
     super.initState();
+  }
+
+  void _confirmSubscription() async {
+    var data = {
+      'user_id' : userData['id'],
+    };
+
+    var res = await CallApi().postData(data, 'checkSubscription');
+    var body = json.decode(res.body);
+   // print(body['status']);
+    if(body['status'] == false){
+      Navigator.push(
+          context,
+          new MaterialPageRoute(
+              builder: (context) => Subscription()));
+    }else if(body['status'] == true){
+      Navigator.push(
+          context,
+          new MaterialPageRoute(
+              builder: (context) => PickUp()));
+
+    }
+
   }
 
   void _getUserInfo() async {
@@ -36,7 +61,7 @@ class _AdminHomeState extends State<AdminHome> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return new Scaffold(
       backgroundColor: Colors.grey[200],
       key: _scaffoldKey,
       appBar: AppBar(
@@ -46,7 +71,7 @@ class _AdminHomeState extends State<AdminHome> {
               _scaffoldKey.currentState.openDrawer();
 
             }),
-        title: Text("Admin"),
+        title: Text("Digiwaste"),
         centerTitle: true,
       ),
       body: Container(
@@ -316,22 +341,16 @@ class _AdminHomeState extends State<AdminHome> {
             ),
             ListTile(
               leading: Icon(FontAwesomeIcons.truck),
-              title: Text('Transporters'),
+              title: Text('Pickups'),
               onTap: () {
-                Navigator.push(
-                    context,
-                    new MaterialPageRoute(
-                        builder: (context) => Transporter()));
+                _confirmSubscription();
               },
             ),
             ListTile(
               leading: Icon(FontAwesomeIcons.calendar),
-              title: Text('Schedules'),
+              title: Text('History'),
               onTap: () {
-                Navigator.push(
-                    context,
-                    new MaterialPageRoute(
-                        builder: (context) => Schedule()));
+                //
               },
             ),
             ListTile(

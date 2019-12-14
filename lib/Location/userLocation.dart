@@ -17,6 +17,7 @@ class GetLocationPage extends StatefulWidget {
 class _GetLocationPageState extends State<GetLocationPage> {
 
   var userData;
+
   @override
   void initState() {
     _getUserInfo();
@@ -44,7 +45,7 @@ class _GetLocationPageState extends State<GetLocationPage> {
               onPressed: () {
             //
               }),
-        title: Text("Your location"),
+        title: Text("Set location"),
         centerTitle: true,
       ),
       body: GoogleMap(
@@ -78,9 +79,14 @@ class _GetLocationPageState extends State<GetLocationPage> {
       _markers["Current Location"] = marker;
     });
 
+    var address = {
+      'longitude': currentLocation.longitude,
+      'latitude': currentLocation.latitude
+    };
+
     var data = {
       'user_id' : userData['id'],
-      'address' : currentLocation,
+      'address' : address,
       'region' : "Moi University"
     };
 

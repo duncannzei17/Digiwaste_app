@@ -1,19 +1,19 @@
 import 'dart:convert';
 
-import 'package:digiwaste_dev/Admin/scheduleScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:digiwaste_dev/Login/loginScreen.dart';
-import 'package:digiwaste_dev/Admin/transporterScreen.dart';
+import 'package:digiwaste_dev/Transporter/transporterNav.dart';
+import 'package:digiwaste_dev/Location/userLocation.dart';
 import 'package:digiwaste_dev/Api/api.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class AdminHome extends StatefulWidget {
+class TransporterHome extends StatefulWidget {
   @override
-  _AdminHomeState createState() => _AdminHomeState();
+  _TransporterHomeState createState() => _TransporterHomeState();
 }
 
-class _AdminHomeState extends State<AdminHome> {
+class _TransporterHomeState extends State<TransporterHome> {
   var userData;
   @override
   void initState() {
@@ -46,7 +46,7 @@ class _AdminHomeState extends State<AdminHome> {
               _scaffoldKey.currentState.openDrawer();
 
             }),
-        title: Text("Admin"),
+        title: Text("Transporter"),
         centerTitle: true,
       ),
       body: Container(
@@ -291,6 +291,78 @@ class _AdminHomeState extends State<AdminHome> {
                   ),
                 ),
 
+                /////////////// Button////////////
+                Padding(
+                  padding: const EdgeInsets.only(top: 20, left: 10, right: 10),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: <Widget>[
+                      /////////// Edit Button /////////////
+                      Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: FlatButton(
+                          child: Padding(
+                            padding: EdgeInsets.only(
+                                top: 8, bottom: 8, left: 10, right: 10),
+                            child: Text(
+                              'DashBoard',
+                              textDirection: TextDirection.ltr,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 15.0,
+                                decoration: TextDecoration.none,
+                                fontWeight: FontWeight.normal,
+                              ),
+                            ),
+                          ),
+                          color: Color(0xFFFF835F),
+                          shape: new RoundedRectangleBorder(
+                              borderRadius: new BorderRadius.circular(20.0)),
+                          onPressed: () {
+                            if(userData['user_type'] == 1) {
+                              Navigator.push(
+                                  context,
+                                  new MaterialPageRoute(
+                                      builder: (context) => TransporterNavigator()));
+                            }
+                            else if(userData['user_type'] == 0){
+                              Navigator.push(
+                                  context,
+                                  new MaterialPageRoute(
+                                      builder: (context) => GetLocationPage()));
+                            }
+                          },
+                        ),
+                      ),
+
+                      ////////////// logout//////////
+
+                      Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: FlatButton(
+                            child: Padding(
+                              padding: EdgeInsets.only(
+                                  top: 8, bottom: 8, left: 10, right: 10),
+                              child: Text(
+                                'Logout',
+                                textDirection: TextDirection.ltr,
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 15.0,
+                                  decoration: TextDecoration.none,
+                                  fontWeight: FontWeight.normal,
+                                ),
+                              ),
+                            ),
+                            color: Color(0xFFFF835F),
+                            shape: new RoundedRectangleBorder(
+                                borderRadius: new BorderRadius.circular(20.0)),
+                            onPressed: logout
+                        ),
+                      ),
+                    ],
+                  ),
+                )
               ],
             ),
           ),
@@ -316,22 +388,12 @@ class _AdminHomeState extends State<AdminHome> {
             ),
             ListTile(
               leading: Icon(FontAwesomeIcons.truck),
-              title: Text('Transporters'),
+              title: Text('Collections'),
               onTap: () {
-                Navigator.push(
-                    context,
-                    new MaterialPageRoute(
-                        builder: (context) => Transporter()));
-              },
-            ),
-            ListTile(
-              leading: Icon(FontAwesomeIcons.calendar),
-              title: Text('Schedules'),
-              onTap: () {
-                Navigator.push(
-                    context,
-                    new MaterialPageRoute(
-                        builder: (context) => Schedule()));
+                // Update the state of the app
+                // ...
+                // Then close the drawer
+                Navigator.pop(context);
               },
             ),
             ListTile(

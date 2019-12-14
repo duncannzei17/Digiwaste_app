@@ -4,10 +4,14 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CallApi{
+<<<<<<< HEAD
 
   final String _url = 'http://aeb381fa.ngrok.io/api/';
 
 
+=======
+  final String _url = 'http://b20ed27b.ngrok.io/api/';
+>>>>>>> e9ffc5b8adbc76fad136e8268beb073b36261621
  /* String get url {
     return _url;
   }*/
@@ -22,7 +26,7 @@ returnUrl(){
         headers: _setHeaders()
     );
   }
-
+  
   getData(apiUrl) async {
     var fullUrl = _url + apiUrl + await _getToken();
     return await http.get(

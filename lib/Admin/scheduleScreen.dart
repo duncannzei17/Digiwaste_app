@@ -1,65 +1,36 @@
 import 'dart:convert';
-<<<<<<< HEAD
-import 'package:digiwaste_dev/Admin/paymentsScreen.dart';
-import 'package:dio/dio.dart';
-
-=======
->>>>>>> e9ffc5b8adbc76fad136e8268beb073b36261621
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:digiwaste_dev/Login/loginScreen.dart';
-import 'package:digiwaste_dev/Admin/SearchUser.dart';
-import 'package:digiwaste_dev/Admin/scheduleScreen.dart';
+import 'package:digiwaste_dev/Admin/createSchedule.dart';
+import 'package:digiwaste_dev/Admin/transporterScreen.dart';
 import 'package:digiwaste_dev/Api/api.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'dart:async';
 
-class Transporter extends StatefulWidget {
+class Schedule extends StatefulWidget {
   @override
-  _TransporterState createState() => _TransporterState();
+  _ScheduleState createState() => _ScheduleState();
 }
 
-class _TransporterState extends State<Transporter>  {
-  var userData;
-  @override
-  void initState() {
-    _getUserInfo();
-    super.initState();
-  }
-
-  void _getUserInfo() async {
-    SharedPreferences localStorage = await SharedPreferences.getInstance();
-    var userJson = localStorage.getString('user');
-    var user = json.decode(userJson);
-    setState(() {
-      userData = user;
-    });
-
-  }
-
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+class _ScheduleState extends State<Schedule>  {
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   Future<List> fetchData() async{
 
-<<<<<<< HEAD
-    final response = await http.get(CallApi().returnUrl()+"transporters");
-=======
-    final response = await CallApi().getData('transporters');
->>>>>>> e9ffc5b8adbc76fad136e8268beb073b36261621
+    final response = await CallApi().getData('showSchedules');
     final dynamic data= json.decode(response.body);
-    print(data['transporters']);
-    return data['transporters'] ;
-
+    //print(data);
+    return data['schedules'];
 
   }
 
-  void _searchUser() {
+  void _addSchedule() {
     Navigator.push(
         context,
         new MaterialPageRoute(
-            builder: (context) => SearchUser()));
+            builder: (context) => CreateSchedule()));
   }
 
   void logout() async{
@@ -77,28 +48,21 @@ class _TransporterState extends State<Transporter>  {
     }
   }
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-<<<<<<< HEAD
-      appBar:AppBar(
-=======
       appBar: AppBar(
->>>>>>> e9ffc5b8adbc76fad136e8268beb073b36261621
         leading: IconButton(
             icon: Icon(FontAwesomeIcons.bars),
             onPressed: () {
               _scaffoldKey.currentState.openDrawer();
 
             }),
-<<<<<<< HEAD
-        title:Text('Transporter'),centerTitle: true,),
-=======
-        title: Text("Transporters"),
+        title: Text("Schedules"),
         centerTitle: true,
       ),
->>>>>>> e9ffc5b8adbc76fad136e8268beb073b36261621
       body: FutureBuilder<List>(
         future: fetchData(),
         builder: (context, snapshot) {
@@ -141,24 +105,7 @@ class _TransporterState extends State<Transporter>  {
               leading: Icon(FontAwesomeIcons.calendar),
               title: Text('Schedules'),
               onTap: () {
-                Navigator.push(
-                    context,
-                    new MaterialPageRoute(
-<<<<<<< HEAD
-                        builder: (context) => Transporter()));
-              },
-            ),
-            ListTile(
-              leading: Icon(FontAwesomeIcons.truck),
-              title: Text('Payment'),
-              onTap: () {
-                Navigator.push(
-                    context,
-                    new MaterialPageRoute(
-                        builder: (context) => Home()));
-=======
-                        builder: (context) => Schedule()));
->>>>>>> e9ffc5b8adbc76fad136e8268beb073b36261621
+                Navigator.pop(context);
               },
             ),
             ListTile(
@@ -172,42 +119,17 @@ class _TransporterState extends State<Transporter>  {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _searchUser,
+        onPressed: _addSchedule,
         child: Icon(FontAwesomeIcons.plus),
       ),
 
     );
-<<<<<<< HEAD
-  }
-  void logout() async{
-    // logout from the server ...
-    var res = await CallApi().getData('logout');
-    var body = json.decode(res.body);
-    if(body['success']){
-      SharedPreferences localStorage = await SharedPreferences.getInstance();
-      localStorage.remove('user');
-      localStorage.remove('token');
-      Navigator.push(
-          context,
-          new MaterialPageRoute(
-              builder: (context) => LogIn()));
-    }
-
-  }
-  void _searchUser() {
-    Navigator.push(
-        context,
-        new MaterialPageRoute(
-            builder: (context) => SearchUser()));
-  }
-}
-=======
   }}
 
->>>>>>> e9ffc5b8adbc76fad136e8268beb073b36261621
 class ItemList extends StatelessWidget{
   List list;
   ItemList({this.list});
+
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
@@ -221,61 +143,46 @@ class ItemList extends StatelessWidget{
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
 
-                      Text(list[i]['firstName']),
+                      Text(list[i]['region']),
 
                       SizedBox(width: 5,),
-                      Text(list[i]['lastName']),
+                      Text(list[i]['transporter_id']),
                     ],
                   ),
 
-                  leading: Icon(Icons.assignment_ind),
+                  leading: Icon(Icons.access_time),
+
                   subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-<<<<<<< HEAD
-                        Text('Phone Number : '),
-                        Text(list[i]['phone'])
-                      ],
-                    ),
-                    SizedBox(height: 2,),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-                        Text('Region : '),
-                        Text(list[i]['region'])
-                      ],
-                    ),
-=======
                         SizedBox(height: 2,),
                         Row(
 
                           mainAxisAlignment: MainAxisAlignment.start,
 
                           children: <Widget>[
-                            Text('Email Address : '),
+                            Text('Collection Day : '),
 
-                            Text(list[i]['email'])
+                            Text(list[i]['collection_day'])
                           ],
                         ),
                         SizedBox(height: 2,),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: <Widget>[
-                            Text('Phone Number : '),
-                            Text(list[i]['phone'])
+                            Text('Start Time : '),
+                            Text(list[i]['start_time'])
                           ],
                         ),
-
-//                    SizedBox(height: 2,),
-//                    Row(
-//                      mainAxisAlignment: MainAxisAlignment.start,
-//                      children: <Widget>[
-//                        Text('Status : '),
-//                        Text(list[i]['status'])
-//                      ],
-//                    ),
->>>>>>> e9ffc5b8adbc76fad136e8268beb073b36261621
-//                    SizedBox(height: 2,),
+                        SizedBox(height: 2,),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: <Widget>[
+                            Text('End Time : '),
+                            Text(list[i]['end_time'])
+                          ],
+                        ),
+                        SizedBox(height: 2,),
 //                    Row(
 //                      mainAxisAlignment: MainAxisAlignment.start,
 //                      children: <Widget>[
@@ -294,12 +201,11 @@ class ItemList extends StatelessWidget{
 //
 //                  ],
 //                ),
-
                       ]),
-                  /* trailing:
-                Switch(
-                  onChanged: (val) => setState(() => _isSwitched = val),
-                  value: _isSwitched,
+                  /*trailing:
+                  Switch(
+                    onChanged: _someFunction(),
+                    value: list[i]['end_time'],
                 ),*/
 
                 ),
@@ -310,18 +216,9 @@ class ItemList extends StatelessWidget{
   }}
 
 
-<<<<<<< HEAD
-=======
 
 
 
-
-
-
-
-
-
->>>>>>> e9ffc5b8adbc76fad136e8268beb073b36261621
 
 
 

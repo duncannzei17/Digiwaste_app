@@ -28,10 +28,6 @@
 .pub-cache/
 .pub/
 /build/
-/lib/Login
-/lib/Signup
-/lib/Transporter
-/lib/Home
 
 # Android related
 **/android/**/gradle-wrapper.jar
