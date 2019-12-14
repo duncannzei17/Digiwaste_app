@@ -4,11 +4,16 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class CallApi{
-  final String _url = 'http://b20ed27b.ngrok.io/api/';
- /* String get url {
+
+  final String _url = 'http://aeb381fa.ngrok.io/api/';
+
+
+  /* String get url {
     return _url;
   }*/
-
+  returnUrl(){
+    return "http://aeb381fa.ngrok.io/api/";
+  }
   postData(data, apiUrl) async {
     var fullUrl = _url + apiUrl + await _getToken();
     return await http.post(
@@ -17,7 +22,7 @@ class CallApi{
         headers: _setHeaders()
     );
   }
-  
+
   getData(apiUrl) async {
     var fullUrl = _url + apiUrl + await _getToken();
     return await http.get(
@@ -32,8 +37,8 @@ class CallApi{
   };
 
   _getToken() async {
-      SharedPreferences localStorage = await SharedPreferences.getInstance();
-      var token = localStorage.getString('token');
-      return '?token=$token';
+    SharedPreferences localStorage = await SharedPreferences.getInstance();
+    var token = localStorage.getString('token');
+    return '?token=$token';
   }
 }

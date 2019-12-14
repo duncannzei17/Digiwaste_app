@@ -1,11 +1,14 @@
 import 'dart:convert';
+//import 'package:digiwaste_dev/Admin/paymentsScreen.dart';
+import 'package:dio/dio.dart';
+
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:digiwaste_dev/Login/loginScreen.dart';
 import 'package:digiwaste_dev/Admin/SearchUser.dart';
-import 'package:digiwaste_dev/Admin/scheduleScreen.dart';
 import 'package:digiwaste_dev/Api/api.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:http/http.dart' as http;
 import 'dart:async';
 
 class Transporter extends StatefulWidget {
@@ -14,54 +17,47 @@ class Transporter extends StatefulWidget {
 }
 
 class _TransporterState extends State<Transporter>  {
+  var userData;
+  @override
+  void initState() {
+    _getUserInfo();
+    super.initState();
+  }
+
+  void _getUserInfo() async {
+    SharedPreferences localStorage = await SharedPreferences.getInstance();
+    var userJson = localStorage.getString('user');
+    var user = json.decode(userJson);
+    setState(() {
+      userData = user;
+    });
+
+  }
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   Future<List> fetchData() async{
 
-    final response = await CallApi().getData('transporters');
+    final response = await http.get(CallApi().returnUrl()+"transporters");
     final dynamic data= json.decode(response.body);
     print(data['transporters']);
     return data['transporters'] ;
 
+
   }
-
-  void _searchUser() {
-    Navigator.push(
-        context,
-        new MaterialPageRoute(
-            builder: (context) => SearchUser()));
-  }
-
-  void logout() async{
-
-    var res = await CallApi().getData('logout');
-    var body = json.decode(res.body);
-    if(body['success']){
-      SharedPreferences localStorage = await SharedPreferences.getInstance();
-      localStorage.remove('user');
-      localStorage.remove('token');
-      Navigator.push(
-          context,
-          new MaterialPageRoute(
-              builder: (context) => LogIn()));
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
+    // TODO: implement build
     return Scaffold(
       key: _scaffoldKey,
-      appBar: AppBar(
+      appBar:AppBar(
         leading: IconButton(
             icon: Icon(FontAwesomeIcons.bars),
             onPressed: () {
               _scaffoldKey.currentState.openDrawer();
 
             }),
-        title: Text("Transporters"),
-        centerTitle: true,
-      ),
+        title:Text('Transporter'),centerTitle: true,),
       body: FutureBuilder<List>(
         future: fetchData(),
         builder: (context, snapshot) {
@@ -101,15 +97,16 @@ class _TransporterState extends State<Transporter>  {
               },
             ),
             ListTile(
-              leading: Icon(FontAwesomeIcons.calendar),
+              leading: Icon(FontAwesomeIcons.truck),
               title: Text('Schedules'),
               onTap: () {
                 Navigator.push(
                     context,
                     new MaterialPageRoute(
-                        builder: (context) => Schedule()));
+                        builder: (context) => Transporter()));
               },
             ),
+
             ListTile(
               leading: Icon(FontAwesomeIcons.signOutAlt),
               title: Text('Logout'),
@@ -126,8 +123,29 @@ class _TransporterState extends State<Transporter>  {
       ),
 
     );
-  }}
+  }
+  void logout() async{
+    // logout from the server ...
+    var res = await CallApi().getData('logout');
+    var body = json.decode(res.body);
+    if(body['success']){
+      SharedPreferences localStorage = await SharedPreferences.getInstance();
+      localStorage.remove('user');
+      localStorage.remove('token');
+      Navigator.push(
+          context,
+          new MaterialPageRoute(
+              builder: (context) => LogIn()));
+    }
 
+  }
+  void _searchUser() {
+    Navigator.push(
+        context,
+        new MaterialPageRoute(
+            builder: (context) => SearchUser()));
+  }
+}
 class ItemList extends StatelessWidget{
   List list;
   ItemList({this.list});
@@ -151,7 +169,8 @@ class ItemList extends StatelessWidget{
                     ],
                   ),
 
-                  leading: Icon(Icons.assignment_ind),
+                  leading: Icon(Icons.widgets),
+
                   subtitle: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
@@ -174,15 +193,14 @@ class ItemList extends StatelessWidget{
                             Text(list[i]['phone'])
                           ],
                         ),
-
-//                    SizedBox(height: 2,),
-//                    Row(
-//                      mainAxisAlignment: MainAxisAlignment.start,
-//                      children: <Widget>[
-//                        Text('Status : '),
-//                        Text(list[i]['status'])
-//                      ],
-//                    ),
+                        SizedBox(height: 2,),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: <Widget>[
+                            Text('Region : '),
+                            Text(list[i]['region'])
+                          ],
+                        ),
 //                    SizedBox(height: 2,),
 //                    Row(
 //                      mainAxisAlignment: MainAxisAlignment.start,
@@ -204,11 +222,6 @@ class ItemList extends StatelessWidget{
 //                ),
 
                       ]),
-                  /* trailing:
-                Switch(
-                  onChanged: (val) => setState(() => _isSwitched = val),
-                  value: _isSwitched,
-                ),*/
 
                 ),
               )
@@ -216,15 +229,6 @@ class ItemList extends StatelessWidget{
         })
     ;
   }}
-
-
-
-
-
-
-
-
-
 
 
 
