@@ -321,7 +321,7 @@ class _AdminHomeState extends State<AdminHome> {
                 Navigator.push(
                     context,
                     new MaterialPageRoute(
-                        builder: (context) => Transporters()));
+                        builder: (context) => Transporter()));
               },
             ),
             ListTile(

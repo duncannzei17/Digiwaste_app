@@ -1,43 +1,57 @@
 import 'dart:convert';
-
-import 'package:digiwaste_dev/Admin/createSchedule.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:digiwaste_dev/Login/loginScreen.dart';
+import 'package:digiwaste_dev/Admin/createSchedule.dart';
 import 'package:digiwaste_dev/Admin/transporterScreen.dart';
 import 'package:digiwaste_dev/Api/api.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'dart:async';
 
 class Schedule extends StatefulWidget {
   @override
   _ScheduleState createState() => _ScheduleState();
 }
 
-class _ScheduleState extends State<Schedule> {
-  var userData;
-  @override
-  void initState() {
-    _getUserInfo();
-    super.initState();
-  }
-
-  void _getUserInfo() async {
-    SharedPreferences localStorage = await SharedPreferences.getInstance();
-    var userJson = localStorage.getString('user');
-    var user = json.decode(userJson);
-    setState(() {
-      userData = user;
-    });
-
-  }
+class _ScheduleState extends State<Schedule>  {
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
+  Future<List> fetchData() async{
+
+    final response = await CallApi().getData('showSchedules');
+    final dynamic data= json.decode(response.body);
+    //print(data);
+    return data['schedules'];
+
+  }
+
+  void _addSchedule() {
+    Navigator.push(
+        context,
+        new MaterialPageRoute(
+            builder: (context) => CreateSchedule()));
+  }
+
+  void logout() async{
+
+    var res = await CallApi().getData('logout');
+    var body = json.decode(res.body);
+    if(body['success']){
+      SharedPreferences localStorage = await SharedPreferences.getInstance();
+      localStorage.remove('user');
+      localStorage.remove('token');
+      Navigator.push(
+          context,
+          new MaterialPageRoute(
+              builder: (context) => LogIn()));
+    }
+  }
 
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[200],
       key: _scaffoldKey,
       appBar: AppBar(
         leading: IconButton(
@@ -49,37 +63,15 @@ class _ScheduleState extends State<Schedule> {
         title: Text("Schedules"),
         centerTitle: true,
       ),
-      body: Container(
-        child: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Card(
-                  elevation: 4.0,
-                  color: Colors.white,
-                  margin: EdgeInsets.only(left: 10, right: 10),
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(15)),
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                        left: 10, right: 10, top: 40, bottom: 40),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-
-
-                      ],
-                    ),
-                  ),
-                ),
-
-              ],
-            ),
-          ),
-        ),
+      body: FutureBuilder<List>(
+        future: fetchData(),
+        builder: (context, snapshot) {
+          if (snapshot.hasError) print(snapshot.error);
+          return snapshot.hasData ? new ItemList(list: snapshot.data,)
+              : new Center(
+            child:  CircularProgressIndicator(),
+          );
+        },
       ),
       drawer: Drawer(
         // Add a ListView to the drawer. This ensures the user can scroll
@@ -106,17 +98,14 @@ class _ScheduleState extends State<Schedule> {
                 Navigator.push(
                     context,
                     new MaterialPageRoute(
-                        builder: (context) => Transporters()));
+                        builder: (context) => Transporter()));
               },
             ),
             ListTile(
               leading: Icon(FontAwesomeIcons.calendar),
               title: Text('Schedules'),
               onTap: () {
-                Navigator.push(
-                    context,
-                    new MaterialPageRoute(
-                        builder: (context) => Schedule()));
+                Navigator.pop(context);
               },
             ),
             ListTile(
@@ -133,29 +122,106 @@ class _ScheduleState extends State<Schedule> {
         onPressed: _addSchedule,
         child: Icon(FontAwesomeIcons.plus),
       ),
+
     );
-  }
-  void logout() async{
-    // logout from the server ...
-    var res = await CallApi().getData('logout');
-    var body = json.decode(res.body);
-    if(body['success']){
-      SharedPreferences localStorage = await SharedPreferences.getInstance();
-      localStorage.remove('user');
-      localStorage.remove('token');
-      Navigator.push(
-          context,
-          new MaterialPageRoute(
-              builder: (context) => LogIn()));
-    }
+  }}
 
-  }
+class ItemList extends StatelessWidget{
+  List list;
+  ItemList({this.list});
 
-  void _addSchedule() {
-    Navigator.push(
-        context,
-        new MaterialPageRoute(
-            builder: (context) => CreateSchedule()));
-  }
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+        itemCount: list == null ? 0 : list.length,
+        itemBuilder: (context, i) {
+          return Container(
+              padding: const EdgeInsets.all(10),
+              child: Card(
+                child: ListTile(
+                  title: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
 
-}
+                      Text(list[i]['region']),
+
+                      SizedBox(width: 5,),
+                      Text(list[i]['transporter_id']),
+                    ],
+                  ),
+
+                  leading: Icon(Icons.access_time),
+
+                  subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        SizedBox(height: 2,),
+                        Row(
+
+                          mainAxisAlignment: MainAxisAlignment.start,
+
+                          children: <Widget>[
+                            Text('Collection Day : '),
+
+                            Text(list[i]['collection_day'])
+                          ],
+                        ),
+                        SizedBox(height: 2,),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: <Widget>[
+                            Text('Start Time : '),
+                            Text(list[i]['start_time'])
+                          ],
+                        ),
+                        SizedBox(height: 2,),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: <Widget>[
+                            Text('End Time : '),
+                            Text(list[i]['end_time'])
+                          ],
+                        ),
+                        SizedBox(height: 2,),
+//                    Row(
+//                      mainAxisAlignment: MainAxisAlignment.start,
+//                      children: <Widget>[
+//                        Text('National ID : '),
+//                        Text(list[i]['address'])
+//                      ],
+//                    ),
+//                    SizedBox(height: 2,),
+//                    Row(
+//                      mainAxisAlignment: MainAxisAlignment.start,
+//                      children: <Widget>[
+//                        Text('Age : '),
+//                        Text(list[i]['age'])
+//                      ],
+//                    ),
+//
+//                  ],
+//                ),
+                      ]),
+                  /*trailing:
+                  Switch(
+                    onChanged: _someFunction(),
+                    value: list[i]['end_time'],
+                ),*/
+
+                ),
+              )
+          );
+        })
+    ;
+  }}
+
+
+
+
+
+
+
+
+
+
+

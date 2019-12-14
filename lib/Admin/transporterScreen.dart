@@ -1,13 +1,11 @@
 import 'dart:convert';
-import 'package:dio/dio.dart';
-
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:digiwaste_dev/Login/loginScreen.dart';
 import 'package:digiwaste_dev/Admin/SearchUser.dart';
+import 'package:digiwaste_dev/Admin/scheduleScreen.dart';
 import 'package:digiwaste_dev/Api/api.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:http/http.dart' as http;
 import 'dart:async';
 
 class Transporter extends StatefulWidget {
@@ -17,19 +15,53 @@ class Transporter extends StatefulWidget {
 
 class _TransporterState extends State<Transporter>  {
 
+  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
   Future<List> fetchData() async{
 
-    final response = await http.get('http://b66a9c22.ngrok.io/api/');
+    final response = await CallApi().getData('transporters');
     final dynamic data= json.decode(response.body);
     print(data['transporters']);
     return data['transporters'] ;
 
   }
+
+  void _searchUser() {
+    Navigator.push(
+        context,
+        new MaterialPageRoute(
+            builder: (context) => SearchUser()));
+  }
+
+  void logout() async{
+
+    var res = await CallApi().getData('logout');
+    var body = json.decode(res.body);
+    if(body['success']){
+      SharedPreferences localStorage = await SharedPreferences.getInstance();
+      localStorage.remove('user');
+      localStorage.remove('token');
+      Navigator.push(
+          context,
+          new MaterialPageRoute(
+              builder: (context) => LogIn()));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Scaffold(
-      appBar:AppBar(title:Text('Transporter'),centerTitle: true,),
+      key: _scaffoldKey,
+      appBar: AppBar(
+        leading: IconButton(
+            icon: Icon(FontAwesomeIcons.bars),
+            onPressed: () {
+              _scaffoldKey.currentState.openDrawer();
+
+            }),
+        title: Text("Transporters"),
+        centerTitle: true,
+      ),
       body: FutureBuilder<List>(
         future: fetchData(),
         builder: (context, snapshot) {
@@ -40,7 +72,7 @@ class _TransporterState extends State<Transporter>  {
           );
         },
       ),
-    drawer: Drawer(
+      drawer: Drawer(
         // Add a ListView to the drawer. This ensures the user can scroll
         // through the options in the drawer if there isn't enough vertical
         // space to fit everything.
@@ -69,23 +101,13 @@ class _TransporterState extends State<Transporter>  {
               },
             ),
             ListTile(
-              leading: Icon(FontAwesomeIcons.truck),
+              leading: Icon(FontAwesomeIcons.calendar),
               title: Text('Schedules'),
               onTap: () {
                 Navigator.push(
                     context,
                     new MaterialPageRoute(
-                        builder: (context) => Transporter()));
-              },
-            ),
-            ListTile(
-              leading: Icon(FontAwesomeIcons.truck),
-              title: Text('Payment'),
-              onTap: () {
-                Navigator.push(
-                    context,
-                    new MaterialPageRoute(
-                        builder: (context) => Transporter()));
+                        builder: (context) => Schedule()));
               },
             ),
             ListTile(
@@ -105,6 +127,7 @@ class _TransporterState extends State<Transporter>  {
 
     );
   }}
+
 class ItemList extends StatelessWidget{
   List list;
   ItemList({this.list});
@@ -114,44 +137,44 @@ class ItemList extends StatelessWidget{
         itemCount: list == null ? 0 : list.length,
         itemBuilder: (context, i) {
           return Container(
-            padding: const EdgeInsets.all(10),
-            child: Card(
-              child: ListTile(
-                title: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
+              padding: const EdgeInsets.all(10),
+              child: Card(
+                child: ListTile(
+                  title: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
 
-                    Text(list[i]['firstName']),
+                      Text(list[i]['firstName']),
 
-                   SizedBox(width: 5,),
-                   Text(list[i]['lastName']),
-                  ],
-                ),
+                      SizedBox(width: 5,),
+                      Text(list[i]['lastName']),
+                    ],
+                  ),
 
-              leading: Icon(Icons.widgets),
-
-                subtitle: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    SizedBox(height: 2,),
-                    Row(
-
-                      mainAxisAlignment: MainAxisAlignment.start,
-
+                  leading: Icon(Icons.assignment_ind),
+                  subtitle: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Text('Email Address : '),
+                        SizedBox(height: 2,),
+                        Row(
 
-                        Text(list[i]['email'])
-                      ],
-                    ),
-                   SizedBox(height: 2,),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-                        Text('Phone Number : '),
-                        Text(list[i]['phone'])
-                      ],
-                    ),
+                          mainAxisAlignment: MainAxisAlignment.start,
+
+                          children: <Widget>[
+                            Text('Email Address : '),
+
+                            Text(list[i]['email'])
+                          ],
+                        ),
+                        SizedBox(height: 2,),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: <Widget>[
+                            Text('Phone Number : '),
+                            Text(list[i]['phone'])
+                          ],
+                        ),
+
 //                    SizedBox(height: 2,),
 //                    Row(
 //                      mainAxisAlignment: MainAxisAlignment.start,
@@ -180,39 +203,30 @@ class ItemList extends StatelessWidget{
 //                  ],
 //                ),
 
-              ]),
+                      ]),
+                  /* trailing:
+                Switch(
+                  onChanged: (val) => setState(() => _isSwitched = val),
+                  value: _isSwitched,
+                ),*/
 
-            ),
-          )
+                ),
+              )
           );
         })
     ;
   }}
 
 
-  void logout() async{
 
-    BuildContext context;
-    // logout from the server ...
-    var res = await CallApi().getData('logout');
-    var body = json.decode(res.body);
-    if(body['success']){
-      SharedPreferences localStorage = await SharedPreferences.getInstance();
-      localStorage.remove('user');
-      localStorage.remove('token');
-      Navigator.push(
-          context,
-          new MaterialPageRoute(
-              builder: (context) => LogIn()));
-    }
-}
-  void _searchUser() {
-    BuildContext context;
-    Navigator.push(
-        context,
-        new MaterialPageRoute(
-            builder: (context) => SearchUser()));
-  }
+
+
+
+
+
+
+
+
 
 
 
