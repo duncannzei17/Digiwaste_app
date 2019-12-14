@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:digiwaste_dev/Admin/scheduleScreen.dart';
 import 'package:dio/dio.dart';
 
 import 'package:flutter/material.dart';
@@ -95,6 +96,7 @@ class _TransporterState extends State<Transporter>  {
                     new MaterialPageRoute(
                         builder: (context) => Transporter()));
               },
+
             ),
             ListTile(
               leading: Icon(FontAwesomeIcons.truck),
@@ -103,7 +105,7 @@ class _TransporterState extends State<Transporter>  {
                 Navigator.push(
                     context,
                     new MaterialPageRoute(
-                        builder: (context) => Transporter()));
+                        builder: (context) => Schedule()));
               },
             ),
 
