@@ -33,7 +33,7 @@ class _HomeState extends State<Home> {
       Navigator.push(
           context,
           new MaterialPageRoute(
-              builder: (context) => Home()));
+              builder: (context) => Subscription()));
     }else if(body['status'] == true){
       Navigator.push(
           context,

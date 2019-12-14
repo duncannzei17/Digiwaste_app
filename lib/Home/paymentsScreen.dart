@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:digiwaste_dev/Admin/transporterScreen.dart';
 import 'package:digiwaste_dev/Api/api.dart';
 import 'package:digiwaste_dev/Login/loginScreen.dart';
 import 'package:flutter/material.dart';
@@ -10,8 +9,8 @@ import 'package:mpesa_flutter_plugin/mpesa_flutter_plugin.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-class Home extends StatefulWidget {
-  Home() {
+class Subscription extends StatefulWidget {
+  Subscription() {
     MpesaFlutterPlugin.setConsumerKey("F3MZV1LEiRE7E8hnDMPc1jbe7FL4OanQ");
     MpesaFlutterPlugin.setConsumerSecret("QyVmrn9tHIclGLTw");
   }
@@ -20,7 +19,7 @@ class Home extends StatefulWidget {
   _HomeState createState() => _HomeState();
 }
 
-class _HomeState extends State<Home> {
+class _HomeState extends State<Subscription> {
   var userData;
 
   @override
@@ -38,7 +37,7 @@ class _HomeState extends State<Home> {
     });
   }
 
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
+
 
   //var number=TextEditingController();
   Future<void> startCheckout({String userPhone, double amount}) async {
@@ -79,9 +78,9 @@ class _HomeState extends State<Home> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-            icon: Icon(FontAwesomeIcons.bars),
+            icon: Icon(FontAwesomeIcons.creditCard),
             onPressed: () {
-              _scaffoldKey.currentState.openDrawer();
+             // _scaffoldKey.currentState.openDrawer();
             }),
         title: Text('Payment'),
         centerTitle: true,
@@ -246,58 +245,7 @@ class _HomeState extends State<Home> {
           ],
         ),
       ),
-      drawer: Drawer(
-        // Add a ListView to the drawer. This ensures the user can scroll
-        // through the options in the drawer if there isn't enough vertical
-        // space to fit everything.
-        child: ListView(
-          // Important: Remove any padding from the ListView.
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            DrawerHeader(
-              child: Icon(
-                FontAwesomeIcons.userCircle,
-                size: 100.0,
-                color: Color(0xFF9b9b9b),
-              ),
-              decoration: BoxDecoration(
-                color: Color(0xFFFF835F),
-              ),
-            ),
-            ListTile(
-              leading: Icon(FontAwesomeIcons.truck),
-              title: Text('Transporters'),
-              onTap: () {
-                Navigator.push(context,
-                    new MaterialPageRoute(builder: (context) => Transporter()));
-              },
-            ),
-            ListTile(
-              leading: Icon(FontAwesomeIcons.truck),
-              title: Text('Schedules'),
-              onTap: () {
-                Navigator.push(context,
-                    new MaterialPageRoute(builder: (context) => Transporter()));
-              },
-            ),
-            ListTile(
-              leading: Icon(FontAwesomeIcons.truck),
-              title: Text('Payment'),
-              onTap: () {
-                Navigator.push(context,
-                    new MaterialPageRoute(builder: (context) => Home()));
-              },
-            ),
-            ListTile(
-              leading: Icon(FontAwesomeIcons.signOutAlt),
-              title: Text('Logout'),
-              onTap: () {
-                logout();
-              },
-            ),
-          ],
-        ),
-      ),
+
     );
   }
 
