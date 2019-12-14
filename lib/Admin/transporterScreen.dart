@@ -1,17 +1,14 @@
 import 'dart:convert';
-<<<<<<< HEAD
 import 'package:digiwaste_dev/Admin/paymentsScreen.dart';
 import 'package:dio/dio.dart';
 
-=======
->>>>>>> e9ffc5b8adbc76fad136e8268beb073b36261621
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:digiwaste_dev/Login/loginScreen.dart';
-import 'package:digiwaste_dev/Admin/SearchUser.dart';
-import 'package:digiwaste_dev/Admin/scheduleScreen.dart';
+//import 'package:digiwaste_dev/Admin/SearchUser.dart';
 import 'package:digiwaste_dev/Api/api.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:http/http.dart' as http;
 import 'dart:async';
 
 class Transporter extends StatefulWidget {
@@ -39,66 +36,28 @@ class _TransporterState extends State<Transporter>  {
 
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
-  final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
-
   Future<List> fetchData() async{
 
-<<<<<<< HEAD
     final response = await http.get(CallApi().returnUrl()+"transporters");
-=======
-    final response = await CallApi().getData('transporters');
->>>>>>> e9ffc5b8adbc76fad136e8268beb073b36261621
     final dynamic data= json.decode(response.body);
     print(data['transporters']);
     return data['transporters'] ;
 
 
   }
-
-  void _searchUser() {
-    Navigator.push(
-        context,
-        new MaterialPageRoute(
-            builder: (context) => SearchUser()));
-  }
-
-  void logout() async{
-
-    var res = await CallApi().getData('logout');
-    var body = json.decode(res.body);
-    if(body['success']){
-      SharedPreferences localStorage = await SharedPreferences.getInstance();
-      localStorage.remove('user');
-      localStorage.remove('token');
-      Navigator.push(
-          context,
-          new MaterialPageRoute(
-              builder: (context) => LogIn()));
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
+    // TODO: implement build
     return Scaffold(
       key: _scaffoldKey,
-<<<<<<< HEAD
       appBar:AppBar(
-=======
-      appBar: AppBar(
->>>>>>> e9ffc5b8adbc76fad136e8268beb073b36261621
         leading: IconButton(
             icon: Icon(FontAwesomeIcons.bars),
             onPressed: () {
               _scaffoldKey.currentState.openDrawer();
 
             }),
-<<<<<<< HEAD
         title:Text('Transporter'),centerTitle: true,),
-=======
-        title: Text("Transporters"),
-        centerTitle: true,
-      ),
->>>>>>> e9ffc5b8adbc76fad136e8268beb073b36261621
       body: FutureBuilder<List>(
         future: fetchData(),
         builder: (context, snapshot) {
@@ -109,7 +68,7 @@ class _TransporterState extends State<Transporter>  {
           );
         },
       ),
-      drawer: Drawer(
+    drawer: Drawer(
         // Add a ListView to the drawer. This ensures the user can scroll
         // through the options in the drawer if there isn't enough vertical
         // space to fit everything.
@@ -138,13 +97,12 @@ class _TransporterState extends State<Transporter>  {
               },
             ),
             ListTile(
-              leading: Icon(FontAwesomeIcons.calendar),
+              leading: Icon(FontAwesomeIcons.truck),
               title: Text('Schedules'),
               onTap: () {
                 Navigator.push(
                     context,
                     new MaterialPageRoute(
-<<<<<<< HEAD
                         builder: (context) => Transporter()));
               },
             ),
@@ -156,9 +114,6 @@ class _TransporterState extends State<Transporter>  {
                     context,
                     new MaterialPageRoute(
                         builder: (context) => Home()));
-=======
-                        builder: (context) => Schedule()));
->>>>>>> e9ffc5b8adbc76fad136e8268beb073b36261621
               },
             ),
             ListTile(
@@ -177,7 +132,6 @@ class _TransporterState extends State<Transporter>  {
       ),
 
     );
-<<<<<<< HEAD
   }
   void logout() async{
     // logout from the server ...
@@ -201,10 +155,6 @@ class _TransporterState extends State<Transporter>  {
             builder: (context) => SearchUser()));
   }
 }
-=======
-  }}
-
->>>>>>> e9ffc5b8adbc76fad136e8268beb073b36261621
 class ItemList extends StatelessWidget{
   List list;
   ItemList({this.list});
@@ -214,25 +164,40 @@ class ItemList extends StatelessWidget{
         itemCount: list == null ? 0 : list.length,
         itemBuilder: (context, i) {
           return Container(
-              padding: const EdgeInsets.all(10),
-              child: Card(
-                child: ListTile(
-                  title: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: <Widget>[
+            padding: const EdgeInsets.all(10),
+            child: Card(
+              child: ListTile(
+                title: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
 
-                      Text(list[i]['firstName']),
+                    Text(list[i]['firstName']),
 
-                      SizedBox(width: 5,),
-                      Text(list[i]['lastName']),
-                    ],
-                  ),
+                   SizedBox(width: 5,),
+                   Text(list[i]['lastName']),
+                  ],
+                ),
 
-                  leading: Icon(Icons.assignment_ind),
-                  subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+              leading: Icon(Icons.widgets),
+
+                subtitle: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    SizedBox(height: 2,),
+                    Row(
+
+                      mainAxisAlignment: MainAxisAlignment.start,
+
                       children: <Widget>[
-<<<<<<< HEAD
+                        Text('Email Address : '),
+
+                        Text(list[i]['email'])
+                      ],
+                    ),
+                   SizedBox(height: 2,),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
                         Text('Phone Number : '),
                         Text(list[i]['phone'])
                       ],
@@ -245,36 +210,6 @@ class ItemList extends StatelessWidget{
                         Text(list[i]['region'])
                       ],
                     ),
-=======
-                        SizedBox(height: 2,),
-                        Row(
-
-                          mainAxisAlignment: MainAxisAlignment.start,
-
-                          children: <Widget>[
-                            Text('Email Address : '),
-
-                            Text(list[i]['email'])
-                          ],
-                        ),
-                        SizedBox(height: 2,),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: <Widget>[
-                            Text('Phone Number : '),
-                            Text(list[i]['phone'])
-                          ],
-                        ),
-
-//                    SizedBox(height: 2,),
-//                    Row(
-//                      mainAxisAlignment: MainAxisAlignment.start,
-//                      children: <Widget>[
-//                        Text('Status : '),
-//                        Text(list[i]['status'])
-//                      ],
-//                    ),
->>>>>>> e9ffc5b8adbc76fad136e8268beb073b36261621
 //                    SizedBox(height: 2,),
 //                    Row(
 //                      mainAxisAlignment: MainAxisAlignment.start,
@@ -295,33 +230,16 @@ class ItemList extends StatelessWidget{
 //                  ],
 //                ),
 
-                      ]),
-                  /* trailing:
-                Switch(
-                  onChanged: (val) => setState(() => _isSwitched = val),
-                  value: _isSwitched,
-                ),*/
+              ]),
 
-                ),
-              )
+            ),
+          )
           );
         })
     ;
   }}
 
 
-<<<<<<< HEAD
-=======
-
-
-
-
-
-
-
-
-
->>>>>>> e9ffc5b8adbc76fad136e8268beb073b36261621
 
 
 
