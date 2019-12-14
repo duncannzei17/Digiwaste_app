@@ -5,13 +5,15 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class CallApi{
 
-  final String _url = 'http://626039fe.ngrok.io/api/';
+  final String _url = 'http://aeb381fa.ngrok.io/api/';
 
 
  /* String get url {
     return _url;
   }*/
-
+returnUrl(){
+  return "http://aeb381fa.ngrok.io/api/";
+}
   postData(data, apiUrl) async {
     var fullUrl = _url + apiUrl + await _getToken();
     return await http.post(

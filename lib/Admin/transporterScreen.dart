@@ -38,7 +38,7 @@ class _TransporterState extends State<Transporter>  {
 
   Future<List> fetchData() async{
 
-    final response = await http.get('http://626039fe.ngrok.io/api/transporters');
+    final response = await http.get(CallApi().returnUrl()+"transporters");
     final dynamic data= json.decode(response.body);
     print(data['transporters']);
     return data['transporters'] ;
