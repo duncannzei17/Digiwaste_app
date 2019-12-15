@@ -14,6 +14,14 @@
   }
 
   class _SignUpState extends State<SignUp> {
+    final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+    bool _autoValidate = false;
+
+    String _email;
+    String _firstname;
+    String _phone;
+    String _lastname;
+
     TextEditingController firstNameController = TextEditingController();
     TextEditingController lastNameController = TextEditingController();
     TextEditingController mailController = TextEditingController();
@@ -62,132 +70,177 @@
                               borderRadius: BorderRadius.circular(15)),
                           child: Padding(
                             padding: const EdgeInsets.all(10.0),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                /////////////// name////////////
+                            child: Form(
+                              key: _formKey,
+                              autovalidate: _autoValidate,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  /////////////// name////////////
 
-                                TextField(
-                                  style: TextStyle(color: Color(0xFF000000)),
-                                  controller: firstNameController,
-                                  cursorColor: Color(0xFF9b9b9b),
-                                  keyboardType: TextInputType.text,
-                                  decoration: InputDecoration(
-                                    prefixIcon: Icon(
-                                      Icons.account_circle,
-                                      color: Colors.grey,
+                                  TextFormField(
+                                    style: TextStyle(color: Color(0xFF000000)),
+                                    controller: firstNameController,
+                                    cursorColor: Color(0xFF9b9b9b),
+                                    keyboardType: TextInputType.text,
+                                    decoration: InputDecoration(
+                                      prefixIcon: Icon(
+                                        Icons.account_circle,
+                                        color: Colors.grey,
+                                      ),
+                                      hintText: "Firstname",
+                                      hintStyle: TextStyle(
+                                          color: Color(0xFF9b9b9b),
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.normal),
                                     ),
-                                    hintText: "Firstname",
-                                    hintStyle: TextStyle(
-                                        color: Color(0xFF9b9b9b),
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.normal),
+                                    validator: (String value) {
+                                      if (value.length < 3)
+                                        return 'Name must be more than 2 charater';
+                                      else
+                                        return null;
+                                    },
+                                    onSaved: (String val) {
+                                      _firstname = val;
+                                    },
                                   ),
-                                ),
-                                TextField(
-                                  style: TextStyle(color: Color(0xFF000000)),
-                                  controller: lastNameController,
-                                  cursorColor: Color(0xFF9b9b9b),
-                                  keyboardType: TextInputType.text,
-                                  decoration: InputDecoration(
-                                    prefixIcon: Icon(
-                                      Icons.account_circle,
-                                      color: Colors.grey,
+                                  TextFormField(
+                                    style: TextStyle(color: Color(0xFF000000)),
+                                    controller: lastNameController,
+                                    cursorColor: Color(0xFF9b9b9b),
+                                    keyboardType: TextInputType.text,
+                                    decoration: InputDecoration(
+                                      prefixIcon: Icon(
+                                        Icons.account_circle,
+                                        color: Colors.grey,
+                                      ),
+                                      hintText: "Lastname",
+                                      hintStyle: TextStyle(
+                                          color: Color(0xFF9b9b9b),
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.normal),
                                     ),
-                                    hintText: "Lastname",
-                                    hintStyle: TextStyle(
-                                        color: Color(0xFF9b9b9b),
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.normal),
+                                    validator: (String value) {
+                                      if (value.length < 3)
+                                        return 'Name must be more than 2 charater';
+                                      else
+                                        return null;
+                                    },
+                                    onSaved: (String val) {
+                                      _lastname = val;
+                                    },
                                   ),
-                                ),
 
-                                /////////////// Email ////////////
+                                  /////////////// Email ////////////
 
-                                TextField(
-                                  style: TextStyle(color: Color(0xFF000000)),
-                                  controller: mailController,
-                                  cursorColor: Color(0xFF9b9b9b),
-                                  keyboardType: TextInputType.text,
-                                  decoration: InputDecoration(
-                                    prefixIcon: Icon(
-                                      Icons.mail,
-                                      color: Colors.grey,
+                                  TextFormField(
+                                    style: TextStyle(color: Color(0xFF000000)),
+                                    controller: mailController,
+                                    cursorColor: Color(0xFF9b9b9b),
+                                    keyboardType: TextInputType.text,
+                                    decoration: InputDecoration(
+                                      prefixIcon: Icon(
+                                        Icons.mail,
+                                        color: Colors.grey,
+                                      ),
+                                      hintText: "Email ",
+                                      hintStyle: TextStyle(
+                                          color: Color(0xFF9b9b9b),
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.normal),
                                     ),
-                                    hintText: "Email ",
-                                    hintStyle: TextStyle(
-                                        color: Color(0xFF9b9b9b),
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.normal),
+                                    validator: (String value) {
+                                      Pattern pattern =
+                                          r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+                                      RegExp regex = new RegExp(pattern);
+                                      if (!regex.hasMatch(value))
+                                        return 'Enter Valid Email';
+                                      else
+                                        return null;
+                                    },
+                                    onSaved: (String val) {
+                                      _email = val;
+                                    },
                                   ),
-                                ),
 
-                                /////////////// password ////////////
+                                  /////////////// password ////////////
 
-                                TextField(
-                                  style: TextStyle(color: Color(0xFF000000)),
-                                  cursorColor: Color(0xFF9b9b9b),
-                                  controller: passwordController,
-                                  keyboardType: TextInputType.text,
-                                  obscureText: true,
-                                  decoration: InputDecoration(
-                                    prefixIcon: Icon(
-                                      Icons.vpn_key,
-                                      color: Colors.grey,
+                                  TextFormField(
+                                    style: TextStyle(color: Color(0xFF000000)),
+                                    cursorColor: Color(0xFF9b9b9b),
+                                    controller: passwordController,
+                                    keyboardType: TextInputType.text,
+                                    obscureText: true,
+                                    decoration: InputDecoration(
+                                      prefixIcon: Icon(
+                                        Icons.vpn_key,
+                                        color: Colors.grey,
+                                      ),
+                                      hintText: "Password",
+                                      hintStyle: TextStyle(
+                                          color: Color(0xFF9b9b9b),
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.normal),
                                     ),
-                                    hintText: "Password",
-                                    hintStyle: TextStyle(
-                                        color: Color(0xFF9b9b9b),
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.normal),
                                   ),
-                                ),
-                                TextField(
-                                  style: TextStyle(color: Color(0xFF000000)),
-                                  controller: phoneController,
-                                  cursorColor: Color(0xFF9b9b9b),
-                                  keyboardType: TextInputType.text,
-                                  decoration: InputDecoration(
-                                    prefixIcon: Icon(
-                                      Icons.mobile_screen_share,
-                                      color: Colors.grey,
+                                  TextFormField(
+                                    style: TextStyle(color: Color(0xFF000000)),
+                                    controller: phoneController,
+                                    cursorColor: Color(0xFF9b9b9b),
+                                    keyboardType: TextInputType.text,
+                                    decoration: InputDecoration(
+                                      prefixIcon: Icon(
+                                        Icons.mobile_screen_share,
+                                        color: Colors.grey,
+                                      ),
+                                      hintText: "Phone",
+                                      hintStyle: TextStyle(
+                                          color: Color(0xFF9b9b9b),
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.normal),
                                     ),
-                                    hintText: "Phone",
-                                    hintStyle: TextStyle(
-                                        color: Color(0xFF9b9b9b),
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.normal),
+                                          validator:(String value) {
+// Indian Mobile number are of 10 digit only
+                                        if (value.length != 10)
+                                          return 'Mobile Number must be of 10 digit';
+                                        else
+                                          return null;
+                                      },
+                                    onSaved: (String val) {
+                                      _email = val;
+                                    },
                                   ),
-                                ),
 
-                                /////////////// SignUp Button ////////////
+                                  /////////////// SignUp Button ////////////
 
-                                Padding(
-                                  padding: const EdgeInsets.all(10.0),
-                                  child: FlatButton(
-                                      child: Padding(
-                                        padding: EdgeInsets.only(
-                                            top: 8, bottom: 8, left: 10, right: 10),
-                                        child: Text(
-                                          _isLoading ? 'Creating...' : 'Create account',
-                                          textDirection: TextDirection.ltr,
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 15.0,
-                                            decoration: TextDecoration.none,
-                                            fontWeight: FontWeight.normal,
+                                  Padding(
+                                    padding: const EdgeInsets.all(10.0),
+                                    child: FlatButton(
+                                        child: Padding(
+                                          padding: EdgeInsets.only(
+                                              top: 8, bottom: 8, left: 10, right: 10),
+                                          child: Text(
+                                            _isLoading ? 'Creating...' : 'Create account',
+                                            textDirection: TextDirection.ltr,
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 15.0,
+                                              decoration: TextDecoration.none,
+                                              fontWeight: FontWeight.normal,
+                                            ),
                                           ),
                                         ),
-                                      ),
-                                      color: Colors.red,
-                                      disabledColor: Colors.grey,
-                                      shape: new RoundedRectangleBorder(
-                                          borderRadius:
-                                          new BorderRadius.circular(20.0)),
-                                      onPressed: _isLoading ? null :  _handleLogin
+                                        color: Colors.red,
+                                        disabledColor: Colors.grey,
+                                        shape: new RoundedRectangleBorder(
+                                            borderRadius:
+                                            new BorderRadius.circular(20.0)),
+                                        onPressed:_validateInputs,
+                                      // _isLoading ? null :  _handleLogin
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ),
                         ),
@@ -259,4 +312,19 @@
 
 
     }
-  }
+
+    _validateInputs() {
+      if (_formKey.currentState.validate()) {
+//    If all data are correct then save data to out variables
+        //_formKey.currentState.save();
+        print("hello world");
+        _handleLogin();
+        print("hello world");
+      } else {
+//    If all data are not valid then start auto validation.
+        setState(() {
+          _autoValidate = true;
+        });
+      }
+    }
+}
