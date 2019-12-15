@@ -10,6 +10,7 @@ import 'package:digiwaste_dev/Admin/adminHomeScreen.dart';
 
 
 class LogIn extends StatefulWidget {
+//  MyApp({Key key}) : super(key: key);
   @override
   _LogInState createState() => _LogInState();
 }
@@ -21,7 +22,9 @@ class _LogInState extends State<LogIn> {
 /*
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 */
-
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  bool _autoValidate = false;
+  String _email;
 
   TextEditingController mailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
@@ -43,6 +46,7 @@ class _LogInState extends State<LogIn> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       body: Container(
         child: Stack(
@@ -77,77 +81,98 @@ class _LogInState extends State<LogIn> {
                           borderRadius: BorderRadius.circular(15)),
                       child: Padding(
                         padding: const EdgeInsets.all(10.0),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            /////////////  Email//////////////
+                        child: Form(
+                          key: _formKey,
+                          autovalidate: _autoValidate,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              /////////////  Email//////////////
 
-                            TextField(
-                              style: TextStyle(color: Color(0xFF000000)),
-                              controller: mailController,
-                              cursorColor: Color(0xFF9b9b9b),
-                              keyboardType: TextInputType.text,
-                              decoration: InputDecoration(
-                                prefixIcon: Icon(
-                                  Icons.account_circle,
-                                  color: Colors.grey,
+                              TextFormField(
+                                style: TextStyle(color: Color(0xFF000000)),
+                                controller: mailController,
+                                cursorColor: Color(0xFF9b9b9b),
+                                keyboardType: TextInputType.emailAddress,
+                                decoration: InputDecoration(
+                                  prefixIcon: Icon(
+                                    Icons.account_circle,
+                                    color: Colors.grey,
+                                  ),
+                                  hintText: "Email",
+                                  hintStyle: TextStyle(
+                                      color: Color(0xFF9b9b9b),
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.normal),
                                 ),
-                                hintText: "Email",
-                                hintStyle: TextStyle(
-                                    color: Color(0xFF9b9b9b),
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.normal),
+                                validator: (String value) {
+                                  Pattern pattern =
+                                      r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+                                  RegExp regex = new RegExp(pattern);
+                                  if (!regex.hasMatch(value))
+                                    return 'Enter Valid Email';
+                                  else
+                                    return null;
+                                },
+                                onSaved: (String val) {
+                                  _email = val;
+                                },
+
                               ),
-                            ),
 
-                            /////////////// password////////////////////
+                              /////////////// password////////////////////
 
-                            TextField(
-                              style: TextStyle(color: Color(0xFF000000)),
-                              cursorColor: Color(0xFF9b9b9b),
-                              controller: passwordController,
-                              keyboardType: TextInputType.text,
-                              obscureText: true,
-                              decoration: InputDecoration(
-                                prefixIcon: Icon(
-                                  Icons.vpn_key,
-                                  color: Colors.grey,
+                              TextFormField(
+                              //  key: _formKey,
+                                style: TextStyle(color: Color(0xFF000000)),
+                                cursorColor: Color(0xFF9b9b9b),
+                                controller: passwordController,
+                                keyboardType: TextInputType.text,
+                                obscureText: true,
+                                decoration: InputDecoration(
+                                  prefixIcon: Icon(
+                                    Icons.vpn_key,
+                                    color: Colors.grey,
+                                  ),
+                                  hintText: "Password",
+                                  hintStyle: TextStyle(
+                                      color: Color(0xFF9b9b9b),
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.normal),
                                 ),
-                                hintText: "Password",
-                                hintStyle: TextStyle(
-                                    color: Color(0xFF9b9b9b),
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.normal),
                               ),
-                            ),
-                            /////////////  LogIn Botton///////////////////
-                            Padding(
-                              padding: const EdgeInsets.all(10.0),
-                              child: FlatButton(
-                                child: Padding(
-                                  padding: EdgeInsets.only(
-                                      top: 8, bottom: 8, left: 10, right: 10),
-                                  child: Text(
-                                    _isLoading? 'auth...' : 'Login',
-                                    textDirection: TextDirection.ltr,
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 15.0,
-                                      decoration: TextDecoration.none,
-                                      fontWeight: FontWeight.normal,
+                              /////////////  LogIn Botton///////////////////
+
+                              Padding(
+                                padding: const EdgeInsets.all(10.0),
+                                child: FlatButton(
+                                  child: Padding(
+                                    padding: EdgeInsets.only(
+                                        top: 8, bottom: 8, left: 10, right: 10),
+                                    child: Text(
+                                      _isLoading? 'auth...' : 'Login',
+                                      textDirection: TextDirection.ltr,
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 15.0,
+                                        decoration: TextDecoration.none,
+                                        fontWeight: FontWeight.normal,
+                                      ),
                                     ),
                                   ),
-                                ),
-                                color: Color(0xFFFF835F),
-                                disabledColor: Colors.grey,
-                                shape: new RoundedRectangleBorder(
-                                    borderRadius:
-                                    new BorderRadius.circular(20.0)),
-                                onPressed: _isLoading ? null : _login,
+                                  color: Color(0xFFFF835F),
+                                  disabledColor: Colors.grey,
+                                  shape: new RoundedRectangleBorder(
+                                      borderRadius:
+                                      new BorderRadius.circular(20.0)),
+                                  onPressed:
+                                    _validateInputs,
 
+
+                                  ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -229,5 +254,22 @@ class _LogInState extends State<LogIn> {
 
 
   }
+
+   _validateInputs() {
+    if (_formKey.currentState.validate()) {
+//    If all data are correct then save data to out variables
+      //_formKey.currentState.save();
+print("hello world");
+_login();
+print("hello world");
+    } else {
+//    If all data are not valid then start auto validation.
+      setState(() {
+        _autoValidate = true;
+      });
+    }
+  }
+
+
 
 }

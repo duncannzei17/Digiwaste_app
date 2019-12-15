@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:digiwaste_dev/Api/api.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
 
 class CreateSchedule extends StatefulWidget {
@@ -20,7 +21,22 @@ class Region {
 }*/
 class _CreateScheduleState extends State<CreateSchedule> {
 
-
+  var alertStyle = AlertStyle(
+    animationType: AnimationType.fromTop,
+    isCloseButton: false,
+    isOverlayTapDismiss: false,
+    descStyle: TextStyle(fontWeight: FontWeight.bold),
+    animationDuration: Duration(milliseconds: 400),
+    alertBorder: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(0.0),
+      side: BorderSide(
+        color: Colors.grey,
+      ),
+    ),
+    titleStyle: TextStyle(
+      color: Colors.red,
+    ),
+  );
 
   List<String> _intervals = ['daily', 'weekly'];
   String _selectedFrequency;
@@ -160,21 +176,22 @@ DateTime datte;
                           }
                           else if((datte.weekday)==2){
                             print("Tuesday");
-                            _date="Monday";
+                            _date="Tuesday";
                           }
                           else if((datte.weekday)==3){
                             print("Wednesday");
-                            _date="Monday";
+                            _date="Wednesday";
                           }else if((datte.weekday)==4){
+                            _date="Thursday";
                             print("Thursday");
                           }else if((datte.weekday)==5){
                             print("Friday");
-                            _date="Monday";
+                            _date="Friday";
                           }else if((datte.weekday)==6){
-                            _date="Monday";
+                            _date="Sunday";
                             print("Saturday");
                           }else if((datte.weekday)==7){
-                            _date="Monday";
+                            _date="Sunday";
                             print("Sunday");
                           };
                         });
@@ -359,7 +376,61 @@ DateTime datte;
                   child: Center(
                     child: FlatButton(
                       onPressed: (){
-                        _createSchedule();
+                        Alert(
+                          context: context,
+                          type: AlertType.warning,
+                          title: "CONFIRM",
+                          desc: "Add Schedule?",
+                          buttons: [
+                            DialogButton(
+                              child: Text(
+                                "NO",
+                                style: TextStyle(color: Colors.white, fontSize: 20),
+                              ),
+                              onPressed: () => Navigator.pop(context),
+                              gradient: LinearGradient(colors: [
+                                Color(0xFFFB415B),
+                                Color(0xFFEE5623)
+                              ]),
+
+                            ),
+                            DialogButton(
+                              child: Text(
+                                "YES",
+                                style: TextStyle(color: Colors.white, fontSize: 20),
+                              ),
+                              onPressed: () {
+                                _createSchedule();
+                               // _createTransporter(filteredNames[index]['email'],filteredNames[index]['id']);
+                                //Navigator.pop(context);
+                                Alert(
+                                  context: context,
+                                  style: alertStyle,
+                                  type: AlertType.info,
+                                  title: "SUCCESS",
+                                  desc: "Schedule Created",
+                                  buttons: [
+                                    DialogButton(
+                                      child: Text(
+                                        "Cool",
+                                        style: TextStyle(color: Colors.white, fontSize: 20),
+                                      ),
+                                      onPressed: () => Navigator.pop(context),
+                                      color: Color.fromRGBO(0, 179, 134, 1.0),
+                                      radius: BorderRadius.circular(0.0),
+                                    ),
+                                  ],
+                                ).show();
+
+                              },
+                              gradient: LinearGradient(colors: [
+                                Color.fromRGBO(19, 123, 71, 1.0),
+                                Color.fromRGBO(19, 123, 19, 1.0)
+                              ]),
+                            )
+                          ],
+                        ).show();
+                        //_createSchedule();
                     },
                       child: Text(
                         "CREATE",
