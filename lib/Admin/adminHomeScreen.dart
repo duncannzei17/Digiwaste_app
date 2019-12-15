@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:digiwaste_dev/Admin/createSchedule.dart';
 import 'package:digiwaste_dev/Admin/scheduleScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -331,7 +332,7 @@ class _AdminHomeState extends State<AdminHome> {
                 Navigator.push(
                     context,
                     new MaterialPageRoute(
-                        builder: (context) => Schedule()));
+                        builder: (context) =>CreateSchedule()));
               },
             ),
             ListTile(
