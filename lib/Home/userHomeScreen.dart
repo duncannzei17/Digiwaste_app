@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:digiwaste_dev/Home/paymentScreen.dart';
+import 'package:digiwaste_dev/Home/paymentsScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:digiwaste_dev/Login/loginScreen.dart';

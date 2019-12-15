@@ -27,7 +27,7 @@ class _CreateScheduleState extends State<CreateSchedule> {
 
   List<String> _regions = ['Moi University', 'Eldoret'];
   String _selectedRegion;
-
+DateTime datte;
   String _date = "Start Date";
   String _time = "Start Time";
   String _time1 = "Start Time";
@@ -149,8 +149,36 @@ class _CreateScheduleState extends State<CreateSchedule> {
                       minTime: DateTime(2000, 1, 1),
                       maxTime: DateTime(2022, 12, 31), onConfirm: (date) {
                         print('confirm $date');
+
                         _date = '${date.year} - ${date.month} - ${date.day}';
-                        setState(() {});
+                         datte=date ;
+                        print(datte.weekday);
+                        setState(() {
+                          if((datte.weekday)==1){
+                            _date="Monday";
+                            print("Monday");
+                          }
+                          else if((datte.weekday)==2){
+                            print("Tuesday");
+                            _date="Monday";
+                          }
+                          else if((datte.weekday)==3){
+                            print("Wednesday");
+                            _date="Monday";
+                          }else if((datte.weekday)==4){
+                            print("Thursday");
+                          }else if((datte.weekday)==5){
+                            print("Friday");
+                            _date="Monday";
+                          }else if((datte.weekday)==6){
+                            _date="Monday";
+                            print("Saturday");
+                          }else if((datte.weekday)==7){
+                            _date="Monday";
+                            print("Sunday");
+                          };
+                        });
+
                       }, currentTime: DateTime.now(), locale: LocaleType.en);
                 },
                 child: Container(

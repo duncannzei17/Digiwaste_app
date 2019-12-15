@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:digiwaste_dev/Login/loginScreen.dart';
 import 'package:digiwaste_dev/Admin/createSchedule.dart';
@@ -10,12 +12,32 @@ import 'package:http/http.dart' as http;
 import 'dart:async';
 
 class PickUp extends StatefulWidget {
+
   @override
   _PickUpState createState() => _PickUpState();
 }
 
+
+var userData;
+String scheduleId='';
 class _PickUpState extends State<PickUp>  {
 
+
+  @override
+  void initState() {
+    _getUserInfo();
+
+    super.initState();
+  }
+  void _getUserInfo() async {
+    SharedPreferences localStorage = await SharedPreferences.getInstance();
+    var userJson = localStorage.getString('user');
+    var user = json.decode(userJson);
+    setState(() {
+      userData = user;
+    });
+
+  }
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
   Future<List> fetchData() async{
@@ -115,42 +137,141 @@ class _PickUpState extends State<PickUp>  {
 class ItemList extends StatelessWidget{
   List list;
   ItemList({this.list});
-
+  bool status=false;
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
         itemCount: list == null ? 0 : list.length,
         itemBuilder: (context, i) {
           return Container(
-              padding: const EdgeInsets.all(10),
+
+              padding: const EdgeInsets.all(9),
               child: Card(
-                child: ListTile(
-                  title: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
+
+               margin: EdgeInsets.all(2),
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(5,15,2,1),
+                  child: Column(
                     children: <Widget>[
+                      ListTile(
 
-                      Text(list[i]['region']),
+                        isThreeLine: true,
+                        contentPadding: EdgeInsets.symmetric(vertical: 4.0),
 
-                    ],
-                  ),
-
-                  leading: Icon(Icons.access_time),
-
-                  subtitle: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        SizedBox(height: 2,),
-                        Row(
+                        //contentPadding: EdgeInsets.all(3),
+                        title: Row(
 
                           mainAxisAlignment: MainAxisAlignment.start,
-
                           children: <Widget>[
-                            Text('Collection Day : '),
 
-                            Text(list[i]['collection_day'])
+                            Text((list[i]['id']).toString()),
                           ],
                         ),
-                        SizedBox(height: 2,),
+                        trailing:  Container(
+                        //  height: 150,
+                          width: 80,
+                          child: ListView(
+                            //mainAxisSize: MainAxisSize.min,
+                              //  crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              Text("Confirm ",style: TextStyle(
+                                color: Color(0xff868686),
+                                fontSize: 12
+                              ),),
+                              FlatButton(
+                                color: Colors.deepOrange,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: new BorderRadius.circular(18.0),
+                                                               ),
+                                onPressed:(){
+                                 scheduleId=list[i]['id'].toString();
+                                 print(scheduleId);
+
+                                  Alert(
+                                    context: context,
+                                    type: AlertType.warning,
+                                    title: "Confirm ",
+                                    //desc: "Make Payment to digiWaste account?",
+                                    content: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: <Widget>[
+
+                                        Text("Select Collection?"),
+
+                                      ],
+                                    ),
+
+                                    buttons: [
+                                      DialogButton(
+                                        child: Text(
+                                          "NO",
+                                          style: TextStyle(color: Colors.white, fontSize: 20),
+                                        ),
+                                        onPressed: () => Navigator.pop(context),
+                                        gradient: LinearGradient(colors: [
+                                          Color(0xFFFB415B),
+                                          Color(0xFFEE5623)
+                                        ]),
+
+                                      ),
+                                      DialogButton(
+                                        child: Text(
+                                          "YES",
+                                          style: TextStyle(color: Colors.white, fontSize: 20),
+                                        ),
+                                        onPressed: () async {
+                                          var data = {
+                                            'user_id' : userData['id'] ,
+                                            'schedule_id' : scheduleId,
+
+                                          };
+
+                                          await CallApi().postData(data, 'addCollection');
+
+                                          // startCheckout(userPhone: "254719724004", amount: 1);
+                                          //  Navigator.pop(context);
+
+                                        },
+                                        gradient: LinearGradient(colors: [
+                                          Color.fromRGBO(19, 123, 71, 1.0),
+                                          Color.fromRGBO(19, 123, 19, 1.0)
+                                        ]),
+                                      )
+                                    ],
+                                  ).show();
+                                } ,
+                                child:Icon(Icons.add,color: Colors.white,),
+
+                              //color: Colors.deepOrange,)
+                             // SizedBox(height:4),
+                              ) ],
+
+                          ),
+                        ),
+
+                        leading: Container(
+                          height: 40,
+                            width: 40,
+                            child: Icon(Icons.access_time)),
+
+                        subtitle: Container(
+                          //margin: EdgeInsets.fromLTRB(4, 10, 0, 25),
+                          child: Column(
+
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                SizedBox(height: 2,),
+                                Row(
+
+                                  mainAxisAlignment: MainAxisAlignment.start,
+
+                                  children: <Widget>[
+                                    Text('Collection Day : '),
+
+                                    Text(list[i]['collection_day'])
+                                  ],
+                                ),
+                                SizedBox(height: 2,),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: <Widget>[
@@ -166,7 +287,7 @@ class ItemList extends StatelessWidget{
                             Text(list[i]['end_time'])
                           ],
                         ),
-                        SizedBox(height: 2,),
+                                SizedBox(height: 2,),
 //                    Row(
 //                      mainAxisAlignment: MainAxisAlignment.start,
 //                      children: <Widget>[
@@ -185,13 +306,17 @@ class ItemList extends StatelessWidget{
 //
 //                  ],
 //                ),
-                      ]),
-                  /*trailing:
-                  Switch(
-                    onChanged: _someFunction(),
-                    value: list[i]['end_time'],
-                ),*/
+                              ]),
+                        ),
+                        /*trailing:
+                        Switch(
+                          onChanged: _someFunction(),
+                          value: list[i]['end_time'],
+                      ),*/
 
+                      ),
+                    ],
+                  ),
                 ),
               )
           );

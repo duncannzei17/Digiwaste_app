@@ -73,11 +73,26 @@ class _GetLocationPageState extends State<GetLocationPage> {
       _markers.clear();
       final marker = Marker(
         markerId: MarkerId("curr_loc"),
+
         position: LatLng(currentLocation.latitude, currentLocation.longitude),
         infoWindow: InfoWindow(title: 'Your Location'),
       );
+      initState(){
+       // _loadMap;
+      };
       _markers["Current Location"] = marker;
     });
+    _loadMap(){
+
+//      mapView.show(
+//          new MapOptions(
+//              mapViewType: MapViewType.normal,
+//              showUserLocation: true,
+//              initialCameraPosition: new CameraPosition(
+//                  new Location(myUserLocation.latitude, myUserLocation.longitude), 14.0),
+//              title: "Recently Visited"),
+//          toolbarActions: [new ToolbarAction("Close", 1)]);
+    }
 
     var address = {
       'longitude': currentLocation.longitude,
