@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'package:digiwaste_dev/Transporter/placeMarker.dart';
 import 'package:digiwaste_dev/Transporter/transporterNav.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
