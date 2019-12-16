@@ -11,8 +11,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class Subscription extends StatefulWidget {
   Subscription() {
-    MpesaFlutterPlugin.setConsumerKey("F3MZV1LEiRE7E8hnDMPc1jbe7FL4OanQ");
-    MpesaFlutterPlugin.setConsumerSecret("QyVmrn9tHIclGLTw");
+    MpesaFlutterPlugin.setConsumerKey("	IuGPc3yiImZLHzfDOQHeHJSG1DV3q6G3");
+    MpesaFlutterPlugin.setConsumerSecret("GB3jLBDqsfeZyBvm");
   }
 
   @override
@@ -55,7 +55,7 @@ class _HomeState extends State<Subscription> {
               scheme: "https",
               host: "sandbox.safaricom.co.ke",
               path: "/callback"),
-          accountReference: "digitrash",
+          accountReference: "Digiwaste",
           phoneNumber: userPhone,
           baseUri: Uri(scheme: "https", host: "sandbox.safaricom.co.ke"),
           transactionDesc: "purchase",
@@ -145,7 +145,7 @@ class _HomeState extends State<Subscription> {
                             style: TextStyle(color: Colors.white, fontSize: 20),
                           ),
                           onPressed: () {
-                            startCheckout(userPhone: "254719724004", amount: 1);
+                            startCheckout(userPhone: userData['phone'], amount: 1);
                           //  Navigator.pop(context);
 
                           },
@@ -221,7 +221,7 @@ class _HomeState extends State<Subscription> {
                                       style: TextStyle(color: Colors.white, fontSize: 20),
                                     ),
                                     onPressed: () {
-                                      startCheckout(userPhone: "254719724004", amount: 1);
+                                      startCheckout(userPhone: userData['phone'], amount: 1);
                                       //  Navigator.pop(context);
 
                                     },

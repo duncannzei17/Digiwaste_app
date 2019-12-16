@@ -19,7 +19,7 @@ class PickUp extends StatefulWidget {
 
 
 var userData;
-String scheduleId='';
+var scheduleId;
 class _PickUpState extends State<PickUp>  {
 
 
@@ -141,6 +141,7 @@ class ItemList extends StatelessWidget{
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
+
         itemCount: list == null ? 0 : list.length,
         itemBuilder: (context, i) {
           return Container(
@@ -164,7 +165,7 @@ class ItemList extends StatelessWidget{
                           mainAxisAlignment: MainAxisAlignment.start,
                           children: <Widget>[
 
-                            Text((list[i]['id']).toString()),
+                            Text(list[i]['region']),
                           ],
                         ),
                         trailing:  Container(
@@ -185,7 +186,7 @@ class ItemList extends StatelessWidget{
                                                                ),
                                 onPressed:(){
                                  scheduleId=list[i]['id'].toString();
-                                 print(scheduleId);
+                                 //print(scheduleId);
 
                                   Alert(
                                     context: context,
@@ -356,7 +357,8 @@ class ItemList extends StatelessWidget{
           );
         })
     ;
-  }}
+  }
+}
 
 
 
