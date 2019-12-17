@@ -1,3 +1,4 @@
+import 'package:digiwaste_dev/Admin/scheduleScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -171,28 +172,28 @@ DateTime datte;
                         print(datte.weekday);
                         setState(() {
                           if((datte.weekday)==1){
-                            _date="Monday";
-                            print("Monday");
+                            _date="Mon";
+
                           }
                           else if((datte.weekday)==2){
-                            print("Tuesday");
-                            _date="Tuesday";
+
+                            _date="Tue";
                           }
                           else if((datte.weekday)==3){
-                            print("Wednesday");
-                            _date="Wednesday";
+
+                            _date="Wed";
                           }else if((datte.weekday)==4){
-                            _date="Thursday";
-                            print("Thursday");
+                            _date="Thur";
+
                           }else if((datte.weekday)==5){
-                            print("Friday");
-                            _date="Friday";
+
+                            _date="Fri";
                           }else if((datte.weekday)==6){
-                            _date="Sunday";
-                            print("Saturday");
+                            _date="Sat";
+
                           }else if((datte.weekday)==7){
-                            _date="Sunday";
-                            print("Sunday");
+                            _date="Sun";
+
                           };
                         });
 
@@ -402,7 +403,7 @@ DateTime datte;
                               onPressed: () {
                                 _createSchedule();
                                // _createTransporter(filteredNames[index]['email'],filteredNames[index]['id']);
-                                //Navigator.pop(context);
+                                Navigator.pop(context);
                                 Alert(
                                   context: context,
                                   style: alertStyle,
@@ -415,7 +416,14 @@ DateTime datte;
                                         "Cool",
                                         style: TextStyle(color: Colors.white, fontSize: 20),
                                       ),
-                                      onPressed: () => Navigator.pop(context),
+                                      onPressed: () {
+
+                                        Navigator.pop(context);
+                                        Navigator.push(
+                                            context,
+                                            new MaterialPageRoute(
+                                                builder: (context) => Schedule()));},
+
                                       color: Color.fromRGBO(0, 179, 134, 1.0),
                                       radius: BorderRadius.circular(0.0),
                                     ),

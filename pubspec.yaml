@@ -50,6 +50,9 @@ flutter:
   # the material Icons class.
   uses-material-design: true
   assets:
+    - images/full-bloom.png
+    - images/mountains.jpeg
+    - images/mountains.jpg
     - images/mpesa-logo.png
   # To add assets to your application, add an assets section, like this:
 

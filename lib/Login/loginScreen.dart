@@ -49,161 +49,239 @@ class _LogInState extends State<LogIn> {
 
     return Scaffold(
       body: Container(
-        child: Stack(
-          children: <Widget>[
-            ///////////  background///////////
-            new Container(
-              decoration: new BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  stops: [0.0, 0.4, 0.9],
-                  colors: [
-                    Color(0xFFFF835F),
-                    Color(0xFFFC663C),
-                    Color(0xFFFF3F1A),
+        height: MediaQuery.of(context).size.height,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          image: DecorationImage(
+            colorFilter: new ColorFilter.mode(
+                Colors.black.withOpacity(0.05), BlendMode.dstATop),
+            image: AssetImage('images/mountains.jpg'),
+            fit: BoxFit.cover,
+          ),
+        ),
+        child: Form(
+          key: _formKey,
+          autovalidate: _autoValidate,
+          child: ListView(
+
+            children: <Widget>[
+              ///////////  background///////////
+              new Container(
+                padding: EdgeInsets.fromLTRB(20,100,20,20),
+                child: Center(
+                  child: Icon(
+                    Icons.delete_outline,
+                    color: Colors.redAccent,
+                    size: 50.0,
+                  ),
+                ),
+              ),
+              new Row(
+                children: <Widget>[
+                  new Expanded(
+                    child: new Padding(
+                      padding: const EdgeInsets.only(left: 40.0),
+                      child: new Text(
+                        "EMAIL",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.redAccent,
+                          fontSize: 15.0,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+
+              new Container(
+                width: MediaQuery.of(context).size.width,
+                margin: const EdgeInsets.only(left: 40.0, right: 40.0, top: 10.0),
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  border: Border(
+                    bottom: BorderSide(
+                        color: Colors.redAccent,
+                        width: 0.5,
+                        style: BorderStyle.solid),
+                  ),
+                ),
+                padding: const EdgeInsets.only(left: 0.0, right: 10.0),
+                child: new Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    new Expanded(
+                      child: TextFormField(
+
+                        style: TextStyle(color: Color(0xFF000000)),
+                        controller: mailController,
+                        cursorColor: Color(0xFF9b9b9b),
+                        keyboardType: TextInputType.emailAddress,
+                        decoration: InputDecoration(
+                          border:InputBorder.none,
+                          prefixIcon: Icon(
+                            Icons.account_circle,
+                            color: Colors.deepOrange,
+                          ),
+                          hintText: "Email",
+                          hintStyle: TextStyle(
+                              color: Color(0xFF9b9b9b),
+                              fontSize: 15,
+                              fontWeight: FontWeight.normal),
+                        ),
+                        validator: (String value) {
+                          Pattern pattern =
+                              r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+                          RegExp regex = new RegExp(pattern);
+                          if (!regex.hasMatch(value))
+                            return 'Enter Valid Email';
+                          else
+                            return null;
+                        },
+                        onSaved: (String val) {
+                          _email = val;
+                        },
+
+                      ),
+                    ),
                   ],
                 ),
               ),
-            ),
-
-            Positioned(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+              SizedBox(
+                height: 24.0,
+              ),
+              new Row(
+                children: <Widget>[
+                  new Expanded(
+                    child: new Padding(
+                      padding: const EdgeInsets.only(left: 40.0),
+                      child: new Text(
+                        "PASSWORD",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.redAccent,
+                          fontSize: 15.0,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              new Container(
+                width: MediaQuery.of(context).size.width,
+                margin: const EdgeInsets.only(left: 40.0, right: 40.0, top: 10.0),
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  border: Border(
+                    bottom: BorderSide(
+                        color: Colors.redAccent,
+                        width: 0.5,
+                        style: BorderStyle.solid),
+                  ),
+                ),
+                padding: const EdgeInsets.only(left: 0.0, right: 10.0),
+                child: new Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
-                    Card(
-                      elevation: 4.0,
-                      color: Colors.white,
-                      margin: EdgeInsets.only(left: 20, right: 20),
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15)),
+                    new Expanded(
+                      child:   TextFormField(
+                        //  key: _formKey,
+                        style: TextStyle(color: Color(0xFF000000)),
+                        cursorColor: Color(0xFF9b9b9b),
+                        controller: passwordController,
+                        keyboardType: TextInputType.text,
+                        obscureText: true,
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          prefixIcon: Icon(
+                            Icons.vpn_key,
+                            color: Colors.deepOrange,
+                          ),
+                          hintText: "Password",
+                          hintStyle: TextStyle(
+                              color: Color(0xFF9b9b9b),
+                              fontSize: 15,
+                              fontWeight: FontWeight.normal),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: 20.0,
+              ),
+
+              new Container(
+                width: MediaQuery.of(context).size.width,
+                margin: const EdgeInsets.only(left: 30.0, right: 30.0, top: 10.0),
+                alignment: Alignment.center,
+                child: new Row(
+                  children: <Widget>[
+                    new Expanded(
                       child: Padding(
                         padding: const EdgeInsets.all(10.0),
-                        child: Form(
-                          key: _formKey,
-                          autovalidate: _autoValidate,
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              /////////////  Email//////////////
-
-                              TextFormField(
-                                style: TextStyle(color: Color(0xFF000000)),
-                                controller: mailController,
-                                cursorColor: Color(0xFF9b9b9b),
-                                keyboardType: TextInputType.emailAddress,
-                                decoration: InputDecoration(
-                                  prefixIcon: Icon(
-                                    Icons.account_circle,
-                                    color: Colors.grey,
-                                  ),
-                                  hintText: "Email",
-                                  hintStyle: TextStyle(
-                                      color: Color(0xFF9b9b9b),
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.normal),
-                                ),
-                                validator: (String value) {
-                                  Pattern pattern =
-                                      r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-                                  RegExp regex = new RegExp(pattern);
-                                  if (!regex.hasMatch(value))
-                                    return 'Enter Valid Email';
-                                  else
-                                    return null;
-                                },
-                                onSaved: (String val) {
-                                  _email = val;
-                                },
-
+                        child: FlatButton(
+                          child: Padding(
+                            padding: EdgeInsets.only(
+                                top: 8, bottom: 8, left: 10, right: 10),
+                            child: Text(
+                              _isLoading ? 'Auth...' : 'LOG IN',
+                              textDirection: TextDirection.ltr,
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 15.0,
+                                decoration: TextDecoration.none,
+                                fontWeight: FontWeight.normal,
                               ),
-
-                              /////////////// password////////////////////
-
-                              TextFormField(
-                              //  key: _formKey,
-                                style: TextStyle(color: Color(0xFF000000)),
-                                cursorColor: Color(0xFF9b9b9b),
-                                controller: passwordController,
-                                keyboardType: TextInputType.text,
-                                obscureText: true,
-                                decoration: InputDecoration(
-                                  prefixIcon: Icon(
-                                    Icons.vpn_key,
-                                    color: Colors.grey,
-                                  ),
-                                  hintText: "Password",
-                                  hintStyle: TextStyle(
-                                      color: Color(0xFF9b9b9b),
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.normal),
-                                ),
-                              ),
-                              /////////////  LogIn Botton///////////////////
-
-                              Padding(
-                                padding: const EdgeInsets.all(10.0),
-                                child: FlatButton(
-                                  child: Padding(
-                                    padding: EdgeInsets.only(
-                                        top: 8, bottom: 8, left: 10, right: 10),
-                                    child: Text(
-                                      _isLoading? 'auth...' : 'Login',
-                                      textDirection: TextDirection.ltr,
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 15.0,
-                                        decoration: TextDecoration.none,
-                                        fontWeight: FontWeight.normal,
-                                      ),
-                                    ),
-                                  ),
-                                  color: Color(0xFFFF835F),
-                                  disabledColor: Colors.grey,
-                                  shape: new RoundedRectangleBorder(
-                                      borderRadius:
-                                      new BorderRadius.circular(20.0)),
-                                  onPressed:
-                                    _validateInputs,
-
-
-                                  ),
-                              ),
-                            ],
+                            ),
                           ),
+                          color: Colors.red,
+                          disabledColor: Colors.grey,
+                          shape: new RoundedRectangleBorder(
+                              borderRadius:
+                              new BorderRadius.circular(20.0)),
+                          onPressed:_validateInputs,
+                          // _isLoading ? null :  _handleLogin
                         ),
                       ),
                     ),
 
-                    ////////////   new account///////////////
-                    Padding(
-                      padding: const EdgeInsets.only(top: 20),
-                      child: InkWell(
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              new MaterialPageRoute(
-                                  builder: (context) => SignUp()));
-                        },
-                        child: Text(
-                          'Create new Account',
-                          textDirection: TextDirection.ltr,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 15.0,
-                            decoration: TextDecoration.none,
-                            fontWeight: FontWeight.normal,
-                          ),
-                        ),
-                      ),
-                    ),
                   ],
                 ),
               ),
-            )
-          ],
+              SizedBox(
+                height: 24.0,
+              ),
+              Center(
+                child: Container(
+                  padding: const EdgeInsets.only(top: 10),
+                  child: InkWell(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          new MaterialPageRoute(
+                              builder: (context) => SignUp()));
+                    },
+                    child: Text(
+                      'Create new Account',
+                      textDirection: TextDirection.ltr,
+                      style: TextStyle(
+                        color: Colors.deepOrange,
+                        fontSize: 15.0,
+                        decoration: TextDecoration.none,
+                        fontWeight: FontWeight.normal,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+
+
+            ],
+          ),
         ),
       ),
     );
