@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:digiwaste_dev/Api/api.dart';
+import 'package:digiwaste_dev/Home/pickUpScreen.dart';
 import 'package:digiwaste_dev/Login/loginScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -11,8 +12,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class Subscription extends StatefulWidget {
   Subscription() {
-    MpesaFlutterPlugin.setConsumerKey("	IuGPc3yiImZLHzfDOQHeHJSG1DV3q6G3");
-    MpesaFlutterPlugin.setConsumerSecret("GB3jLBDqsfeZyBvm");
+    MpesaFlutterPlugin.setConsumerKey("F3MZV1LEiRE7E8hnDMPc1jbe7FL4OanQ");
+    MpesaFlutterPlugin.setConsumerSecret("QyVmrn9tHIclGLTw");
   }
 
   @override
@@ -21,7 +22,22 @@ class Subscription extends StatefulWidget {
 
 class _HomeState extends State<Subscription> {
   var userData;
-
+  var alertStyle = AlertStyle(
+    animationType: AnimationType.fromTop,
+    isCloseButton: false,
+    isOverlayTapDismiss: false,
+    descStyle: TextStyle(fontWeight: FontWeight.bold),
+    animationDuration: Duration(milliseconds: 400),
+    alertBorder: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(0.0),
+      side: BorderSide(
+        color: Colors.grey,
+      ),
+    ),
+    titleStyle: TextStyle(
+      color: Colors.red,
+    ),
+  );
   @override
   void initState() {
     _getUserInfo();
@@ -37,6 +53,48 @@ class _HomeState extends State<Subscription> {
     });
   }
 
+  void _updateSubscription() async {
+
+
+    var data = {
+      'user_id' : userData['id'],
+
+    };
+
+    var res = await CallApi().postData(data, 'updateSubscription');
+    var body = json.decode(res.body);
+    if(body['success']){
+      Alert(
+        context: context,
+        style: alertStyle,
+        type: AlertType.info,
+        title: "SUCCESS",
+        desc: "Subscrioption successful",
+        buttons: [
+          DialogButton(
+            child: Text(
+              "Cool",
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            ),
+            onPressed: () {Navigator.pop(context);
+            Navigator.push(
+                context,
+                new MaterialPageRoute(
+                    builder: (context) => PickUp()));
+            },
+            color: Color.fromRGBO(0, 179, 134, 1.0),
+            radius: BorderRadius.circular(0.0),
+          ),
+        ],
+      ).show();
+
+    }
+
+
+
+
+
+  }
 
 
   //var number=TextEditingController();
@@ -55,7 +113,7 @@ class _HomeState extends State<Subscription> {
               scheme: "https",
               host: "sandbox.safaricom.co.ke",
               path: "/callback"),
-          accountReference: "Digiwaste",
+          accountReference: "digitrash",
           phoneNumber: userPhone,
           baseUri: Uri(scheme: "https", host: "sandbox.safaricom.co.ke"),
           transactionDesc: "purchase",
@@ -145,7 +203,9 @@ class _HomeState extends State<Subscription> {
                             style: TextStyle(color: Colors.white, fontSize: 20),
                           ),
                           onPressed: () {
-                            startCheckout(userPhone: userData['phone'], amount: 1);
+                            Navigator.pop(context);
+                            startCheckout(userPhone: "254719724004", amount: 1);
+                            _updateSubscription();
                           //  Navigator.pop(context);
 
                           },
@@ -221,7 +281,12 @@ class _HomeState extends State<Subscription> {
                                       style: TextStyle(color: Colors.white, fontSize: 20),
                                     ),
                                     onPressed: () {
-                                      startCheckout(userPhone: userData['phone'], amount: 1);
+
+                                      Navigator.pop(context);
+                                      startCheckout(userPhone: "254719724004", amount: 1);
+                                      _updateSubscription();
+
+
                                       //  Navigator.pop(context);
 
                                     },

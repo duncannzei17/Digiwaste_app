@@ -1,3 +1,4 @@
+import 'package:digiwaste_dev/Admin/transporterScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:digiwaste_dev/Api/api.dart';
@@ -112,7 +113,7 @@ class _SearchUserState extends State<SearchUser> {
                         "NO",
                         style: TextStyle(color: Colors.white, fontSize: 20),
                       ),
-                      onPressed: () => Navigator.pop(context),
+                      onPressed: () =>  Navigator.pop(context),
                       gradient: LinearGradient(colors: [
                         Color(0xFFFB415B),
                         Color(0xFFEE5623)
@@ -139,7 +140,12 @@ class _SearchUserState extends State<SearchUser> {
                                 "Cool",
                                 style: TextStyle(color: Colors.white, fontSize: 20),
                               ),
-                              onPressed: () => Navigator.pop(context),
+                              onPressed: () {Navigator.pop(context);
+                              Navigator.push(
+                                  context,
+                                  new MaterialPageRoute(
+                                      builder: (context) => Transporter()));
+                              },
                               color: Color.fromRGBO(0, 179, 134, 1.0),
                               radius: BorderRadius.circular(0.0),
                             ),

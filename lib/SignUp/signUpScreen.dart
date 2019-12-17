@@ -34,247 +34,368 @@
     Widget build(BuildContext context) {
       return Scaffold(
         body: Container(
-          child: Stack(
-            children: <Widget>[
-              /////////////  background/////////////
-              new Container(
-                decoration: new BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    stops: [0.0, 0.4, 0.9],
-                    colors: [
-                      Color(0xFFFF835F),
-                      Color(0xFFFC663C),
-                      Color(0xFFFF3F1A),
-                    ],
-                  ),
-                ),
-              ),
-
-              Positioned(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
+          height: MediaQuery.of(context).size.height,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            image: DecorationImage(
+              colorFilter: new ColorFilter.mode(
+                  Colors.black.withOpacity(0.05), BlendMode.dstATop),
+              image: AssetImage('images/mountains.jpg'),
+              fit: BoxFit.cover,
+            ),
+          ),
+          child: Form(
+            key: _formKey,
+            autovalidate: _autoValidate,
+            child: ListView(
+              children: <Widget>[
+                new Container(
+                  padding: EdgeInsets.fromLTRB(20,30,20,20),
                   child: Center(
-                    child: ListView(
-
-
-                      children: <Widget>[
-
-                        SizedBox(height: 100,),
-                        Card(
-                          elevation: 4.0,
-                          color: Colors.white,
-                          margin: EdgeInsets.only(left: 20, right: 20),
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15)),
-                          child: Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Form(
-                              key: _formKey,
-                              autovalidate: _autoValidate,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  /////////////// name////////////
-
-                                  TextFormField(
-                                    style: TextStyle(color: Color(0xFF000000)),
-                                    controller: firstNameController,
-                                    cursorColor: Color(0xFF9b9b9b),
-                                    keyboardType: TextInputType.text,
-                                    decoration: InputDecoration(
-                                      prefixIcon: Icon(
-                                        Icons.account_circle,
-                                        color: Colors.grey,
-                                      ),
-                                      hintText: "Firstname",
-                                      hintStyle: TextStyle(
-                                          color: Color(0xFF9b9b9b),
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.normal),
-                                    ),
-                                    validator: (String value) {
-                                      if (value.length < 3)
-                                        return 'Name must be more than 2 charater';
-                                      else
-                                        return null;
-                                    },
-                                    onSaved: (String val) {
-                                      _firstname = val;
-                                    },
-                                  ),
-                                  TextFormField(
-                                    style: TextStyle(color: Color(0xFF000000)),
-                                    controller: lastNameController,
-                                    cursorColor: Color(0xFF9b9b9b),
-                                    keyboardType: TextInputType.text,
-                                    decoration: InputDecoration(
-                                      prefixIcon: Icon(
-                                        Icons.account_circle,
-                                        color: Colors.grey,
-                                      ),
-                                      hintText: "Lastname",
-                                      hintStyle: TextStyle(
-                                          color: Color(0xFF9b9b9b),
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.normal),
-                                    ),
-                                    validator: (String value) {
-                                      if (value.length < 3)
-                                        return 'Name must be more than 2 charater';
-                                      else
-                                        return null;
-                                    },
-                                    onSaved: (String val) {
-                                      _lastname = val;
-                                    },
-                                  ),
-
-                                  /////////////// Email ////////////
-
-                                  TextFormField(
-                                    style: TextStyle(color: Color(0xFF000000)),
-                                    controller: mailController,
-                                    cursorColor: Color(0xFF9b9b9b),
-                                    keyboardType: TextInputType.text,
-                                    decoration: InputDecoration(
-                                      prefixIcon: Icon(
-                                        Icons.mail,
-                                        color: Colors.grey,
-                                      ),
-                                      hintText: "Email ",
-                                      hintStyle: TextStyle(
-                                          color: Color(0xFF9b9b9b),
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.normal),
-                                    ),
-                                    validator: (String value) {
-                                      Pattern pattern =
-                                          r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-                                      RegExp regex = new RegExp(pattern);
-                                      if (!regex.hasMatch(value))
-                                        return 'Enter Valid Email';
-                                      else
-                                        return null;
-                                    },
-                                    onSaved: (String val) {
-                                      _email = val;
-                                    },
-                                  ),
-
-                                  /////////////// password ////////////
-
-                                  TextFormField(
-                                    style: TextStyle(color: Color(0xFF000000)),
-                                    cursorColor: Color(0xFF9b9b9b),
-                                    controller: passwordController,
-                                    keyboardType: TextInputType.text,
-                                    obscureText: true,
-                                    decoration: InputDecoration(
-                                      prefixIcon: Icon(
-                                        Icons.vpn_key,
-                                        color: Colors.grey,
-                                      ),
-                                      hintText: "Password",
-                                      hintStyle: TextStyle(
-                                          color: Color(0xFF9b9b9b),
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.normal),
-                                    ),
-                                  ),
-                                  TextFormField(
-                                    style: TextStyle(color: Color(0xFF000000)),
-                                    controller: phoneController,
-                                    cursorColor: Color(0xFF9b9b9b),
-                                    keyboardType: TextInputType.text,
-                                    decoration: InputDecoration(
-                                      prefixIcon: Icon(
-                                        Icons.mobile_screen_share,
-                                        color: Colors.grey,
-                                      ),
-                                      hintText: "Phone",
-                                      hintStyle: TextStyle(
-                                          color: Color(0xFF9b9b9b),
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.normal),
-                                    ),
-                                          validator:(String value) {
-// Indian Mobile number are of 10 digit only
-                                        if (value.length != 10)
-                                          return 'Mobile Number must be of 10 digit';
-                                        else
-                                          return null;
-                                      },
-                                    onSaved: (String val) {
-                                      _email = val;
-                                    },
-                                  ),
-
-                                  /////////////// SignUp Button ////////////
-
-                                  Padding(
-                                    padding: const EdgeInsets.all(10.0),
-                                    child: FlatButton(
-                                        child: Padding(
-                                          padding: EdgeInsets.only(
-                                              top: 8, bottom: 8, left: 10, right: 10),
-                                          child: Text(
-                                            _isLoading ? 'Creating...' : 'Create account',
-                                            textDirection: TextDirection.ltr,
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                              fontSize: 15.0,
-                                              decoration: TextDecoration.none,
-                                              fontWeight: FontWeight.normal,
-                                            ),
-                                          ),
-                                        ),
-                                        color: Colors.red,
-                                        disabledColor: Colors.grey,
-                                        shape: new RoundedRectangleBorder(
-                                            borderRadius:
-                                            new BorderRadius.circular(20.0)),
-                                        onPressed:_validateInputs,
-                                      // _isLoading ? null :  _handleLogin
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-
-                        /////////////// already have an account ////////////
-                        Center(
-                          child: Padding(
-                            padding: const EdgeInsets.only(top: 20),
-                            child: InkWell(
-                              onTap: () {
-                                Navigator.push(
-                                    context,
-                                    new MaterialPageRoute(
-                                        builder: (context) => LogIn()));
-                              },
-                              child: Text(
-                                'Already have an Account',
-                                textDirection: TextDirection.ltr,
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 15.0,
-                                  decoration: TextDecoration.none,
-                                  fontWeight: FontWeight.normal,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
+                    child: Icon(
+                      Icons.delete_outline,
+                      color: Colors.redAccent,
+                      size: 50.0,
                     ),
                   ),
                 ),
-              )
-            ],
+
+                new Row(
+                  children: <Widget>[
+                    new Expanded(
+                      child: new Padding(
+                        padding: const EdgeInsets.only(left: 40.0,top: 5),
+                        child: new Text(
+                          "FIRSTNAME",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.redAccent,
+                            fontSize: 15.0,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Container(
+                  margin: const EdgeInsets.only(left: 40.0, right: 40.0, top: 1.0),
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(
+                          color: Colors.redAccent,
+                          width: 0.5,
+                          style: BorderStyle.solid),
+                    ),
+                  ),
+                  child: TextFormField(
+                    style: TextStyle(color: Color(0xFF000000)),
+                    controller: firstNameController,
+                    cursorColor: Color(0xFF9b9b9b),
+                    keyboardType: TextInputType.text,
+                    decoration: InputDecoration(
+                      border:InputBorder.none,
+                      prefixIcon: Icon(
+                        Icons.account_circle,
+                        color: Colors.deepOrange,
+                      ),
+                      hintText: "John",
+                      hintStyle: TextStyle(
+                          color: Color(0xFF9b9b9b),
+                          fontSize: 15,
+                          fontWeight: FontWeight.normal),
+                    ),
+                    validator: (String value) {
+                      if (value.length < 3)
+                        return 'Name must be more than 2 charater';
+                      else
+                        return null;
+                    },
+                    onSaved: (String val) {
+                      _firstname = val;
+                    },
+                  ),
+                ),
+                new Row(
+                  children: <Widget>[
+                    new Expanded(
+                      child: new Padding(
+                        padding: const EdgeInsets.only(left: 40.0,top: 5),
+                        child: new Text(
+                          "LASTNAME",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.redAccent,
+                            fontSize: 15.0,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Container(
+                  margin: const EdgeInsets.only(left: 40.0, right: 40.0, top: 1.0),
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(
+                          color: Colors.redAccent,
+                          width: 0.5,
+                          style: BorderStyle.solid),
+                    ),
+                  ),
+                  child: TextFormField(
+                    style: TextStyle(color: Color(0xFF000000)),
+                    controller: lastNameController,
+                    cursorColor: Color(0xFF9b9b9b),
+                    keyboardType: TextInputType.text,
+                    decoration: InputDecoration(
+                      border:InputBorder.none,
+                      prefixIcon: Icon(
+                        Icons.account_circle,
+                        color: Colors.deepOrange,
+                      ),
+                      hintText: "Doe",
+                      hintStyle: TextStyle(
+                          color: Color(0xFF9b9b9b),
+                          fontSize: 15,
+                          fontWeight: FontWeight.normal),
+                    ),
+                    validator: (String value) {
+                      if (value.length < 3)
+                        return 'Name must be more than 2 charater';
+                      else
+                        return null;
+                    },
+                    onSaved: (String val) {
+                      _lastname = val;
+                    },
+                  ),
+                ),
+                new Row(
+                  children: <Widget>[
+                    new Expanded(
+                      child: new Padding(
+                        padding: const EdgeInsets.only(left: 40.0,top: 5),
+                        child: new Text(
+                          "EMAIL",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.redAccent,
+                            fontSize: 15.0,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                /////////////// Email ////////////
+
+                Container(
+                  margin: const EdgeInsets.only(left: 40.0, right: 40.0, top: 1.0),
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(
+                          color: Colors.redAccent,
+                          width: 0.5,
+                          style: BorderStyle.solid),
+                    ),
+                  ),
+                  child: TextFormField(
+                    style: TextStyle(color: Color(0xFF000000)),
+                    controller: mailController,
+                    cursorColor: Color(0xFF9b9b9b),
+                    keyboardType: TextInputType.text,
+                    decoration: InputDecoration(
+                      border:InputBorder.none,
+                      prefixIcon: Icon(
+                        Icons.mail,
+                        color: Colors.deepOrange,
+                      ),
+                      hintText: "johndoe@gmail.com ",
+                      hintStyle: TextStyle(
+                          color: Color(0xFF9b9b9b),
+                          fontSize: 15,
+                          fontWeight: FontWeight.normal),
+                    ),
+                    validator: (String value) {
+                      Pattern pattern =
+                          r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+                      RegExp regex = new RegExp(pattern);
+                      if (!regex.hasMatch(value))
+                        return 'Enter Valid Email';
+                      else
+                        return null;
+                    },
+                    onSaved: (String val) {
+                      _email = val;
+                    },
+                  ),
+                ),
+                new Row(
+                  children: <Widget>[
+                    new Expanded(
+                      child: new Padding(
+                        padding: const EdgeInsets.only(left: 40.0,top: 5),
+                        child: new Text(
+                          "PASSWORD",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.redAccent,
+                            fontSize: 15.0,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                /////////////// password ////////////
+
+                Container(
+                  margin: const EdgeInsets.only(left: 40.0, right: 40.0, top: 1.0),
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(
+                          color: Colors.redAccent,
+                          width: 0.5,
+                          style: BorderStyle.solid),
+                    ),
+                  ),
+                  child: TextFormField(
+                    style: TextStyle(color: Color(0xFF000000)),
+                    cursorColor: Color(0xFF9b9b9b),
+                    controller: passwordController,
+                    keyboardType: TextInputType.text,
+                    obscureText: true,
+                    decoration: InputDecoration(
+                      border:InputBorder.none,
+                      prefixIcon: Icon(
+                        Icons.vpn_key,
+                        color: Colors.deepOrange,
+                      ),
+                      hintText: "************",
+                      hintStyle: TextStyle(
+                          color: Color(0xFF9b9b9b),
+                          fontSize: 15,
+                          fontWeight: FontWeight.normal),
+                    ),
+                  ),
+                ),
+                new Row(
+                  children: <Widget>[
+                    new Expanded(
+                      child: new Padding(
+                        padding: const EdgeInsets.only(left: 40.0,top: 5),
+                        child: new Text(
+                          "PHONE NUMBER",
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.redAccent,
+                            fontSize: 15.0,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                Container(
+                  margin: const EdgeInsets.only(left: 40.0, right: 40.0, top: 1.0),
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    border: Border(
+                      bottom: BorderSide(
+                          color: Colors.redAccent,
+                          width: 0.5,
+                          style: BorderStyle.solid),
+                    ),
+                  ),
+                  child: TextFormField(
+                    style: TextStyle(color: Color(0xFF000000)),
+                    controller: phoneController,
+                    cursorColor: Color(0xFF9b9b9b),
+                    keyboardType: TextInputType.text,
+                    decoration: InputDecoration(
+                      border:InputBorder.none,
+                      prefixIcon: Icon(
+                        Icons.mobile_screen_share,
+                        color: Colors.deepOrange,
+                      ),
+                      hintText: "0712345678",
+                      hintStyle: TextStyle(
+                          color: Color(0xFF9b9b9b),
+                          fontSize: 15,
+                          fontWeight: FontWeight.normal),
+                    ),
+                    validator:(String value) {
+// Indian Mobile number are of 10 digit only
+                      if (value.length != 10)
+                        return 'Mobile Number must be of 10 digit';
+                      else
+                        return null;
+                    },
+                    onSaved: (String val) {
+                      _email = val;
+                    },
+                  ),
+                ),
+
+                /////////////// SignUp Button ////////////
+
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: FlatButton(
+                    child: Padding(
+                      padding: EdgeInsets.only(
+                          top: 8, bottom: 8, left: 10, right: 10),
+                      child: Text(
+                        _isLoading ? 'Creating...' : 'Create account',
+                        textDirection: TextDirection.ltr,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 15.0,
+                          decoration: TextDecoration.none,
+                          fontWeight: FontWeight.normal,
+                        ),
+                      ),
+                    ),
+                    color: Colors.red,
+                    disabledColor: Colors.grey,
+                    shape: new RoundedRectangleBorder(
+                        borderRadius:
+                        new BorderRadius.circular(20.0)),
+                    onPressed:_validateInputs,
+                    // _isLoading ? null :  _handleLogin
+                  ),
+                ),
+                Center(
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 20,bottom: 20),
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            new MaterialPageRoute(
+                                builder: (context) => LogIn()));
+                      },
+                      child: Text(
+                        'Already have an Account',
+                        textDirection: TextDirection.ltr,
+                        style: TextStyle(
+                          color: Colors.deepOrange,
+                          fontSize: 15.0,
+                          decoration: TextDecoration.none,
+                          fontWeight: FontWeight.normal,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+
+
+              ],
+            ),
           ),
         ),
       );
@@ -317,9 +438,9 @@
       if (_formKey.currentState.validate()) {
 //    If all data are correct then save data to out variables
         //_formKey.currentState.save();
-        print("hello world");
+      //  print("hello world");
         _handleLogin();
-        print("hello world");
+        //print("hello world");
       } else {
 //    If all data are not valid then start auto validation.
         setState(() {

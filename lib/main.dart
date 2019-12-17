@@ -1,3 +1,4 @@
+import 'package:digiwaste_dev/landingScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:digiwaste_dev/Home/userHomeScreen.dart';
 import 'package:digiwaste_dev/Login/loginScreen.dart';
@@ -40,7 +41,7 @@ class _MyAppState extends State<MyApp> {
         primaryColor: PrimaryColor,
       ),
       home: Scaffold(
-        body: _isLoggedIn ? Home() :  LogIn(),
+        body: _isLoggedIn ? Home() :  LandingScreen(),
        //body: Transporter()
       ),
 
