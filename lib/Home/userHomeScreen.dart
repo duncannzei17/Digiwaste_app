@@ -344,13 +344,7 @@ class _HomeState extends State<Home> {
                 _confirmSubscription();
               },
             ),
-            ListTile(
-              leading: Icon(FontAwesomeIcons.calendar),
-              title: Text('History'),
-              onTap: () {
-                //
-              },
-            ),
+
             ListTile(
               leading: Icon(FontAwesomeIcons.signOutAlt),
               title: Text('Logout'),
