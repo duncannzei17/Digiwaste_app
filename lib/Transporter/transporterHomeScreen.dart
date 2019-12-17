@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:digiwaste_dev/Login/loginScreen.dart';
-import 'package:digiwaste_dev/Transporter/transporterNav.dart';
+import 'package:digiwaste_dev/Transporter/transporterSchedules.dart';
 import 'package:digiwaste_dev/Location/userLocation.dart';
 import 'package:digiwaste_dev/Api/api.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -319,18 +319,7 @@ class _TransporterHomeState extends State<TransporterHome> {
                           shape: new RoundedRectangleBorder(
                               borderRadius: new BorderRadius.circular(20.0)),
                           onPressed: () {
-                            if(userData['user_type'] == 1) {
-                              Navigator.push(
-                                  context,
-                                  new MaterialPageRoute(
-                                      builder: (context) => TransporterNavigator()));
-                            }
-                            else if(userData['user_type'] == 0){
-                              Navigator.push(
-                                  context,
-                                  new MaterialPageRoute(
-                                      builder: (context) => GetLocationPage()));
-                            }
+                            //
                           },
                         ),
                       ),
@@ -390,10 +379,10 @@ class _TransporterHomeState extends State<TransporterHome> {
               leading: Icon(FontAwesomeIcons.truck),
               title: Text('Collections'),
               onTap: () {
-                // Update the state of the app
-                // ...
-                // Then close the drawer
-                Navigator.pop(context);
+                Navigator.push(
+                    context,
+                    new MaterialPageRoute(
+                        builder: (context) => TransporterSchedule()));
               },
             ),
             ListTile(
