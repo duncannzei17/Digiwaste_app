@@ -114,13 +114,7 @@ class _PickUpState extends State<PickUp>  {
                 //
               },
             ),
-            ListTile(
-              leading: Icon(FontAwesomeIcons.calendar),
-              title: Text('History'),
-              onTap: () {
-                //
-              },
-            ),
+
             ListTile(
               leading: Icon(FontAwesomeIcons.signOutAlt),
               title: Text('Logout'),
@@ -221,6 +215,7 @@ class ItemList extends StatelessWidget{
                                           style: TextStyle(color: Colors.white, fontSize: 20),
                                         ),
                                         onPressed: () async {
+                                          Navigator.pop(context);
                                           var data = {
                                             'user_id' : userData['id'] ,
                                             'schedule_id' : scheduleId,
